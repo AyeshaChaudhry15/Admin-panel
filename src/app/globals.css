@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* EVINN admin theme: deep navy surfaces with the brand's electric green. */
+@theme {
+  --color-canvas: #071018;
+  --color-sidebar: #061521;
+  --color-sidebar-deep: #05111b;
+  --color-surface: #0d1720;
+  --color-surface-raised: #111d27;
+  --color-field: #081119;
+  --color-line: #1e2c38;
+  --color-line-strong: #2a3946;
+
+  --color-ink: #e8ebf2;
+  --color-ink-soft: #c3ccd6;
+  --color-muted: #8390a0;
+  --color-subtle: #5f6c7a;
+
+  --color-brand: #66dc17;
+  --color-brand-strong: #7deb32;
+  --color-brand-deep: #205127;
+  --color-brand-ink: #061008;
+
+  --color-info: #4ea1f5;
+  --color-violet: #a780f0;
+  --color-warning: #f0a531;
+  --color-danger: #f16167;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-canvas font-sans text-ink antialiased;
+  }
+
+  ::selection {
+    @apply bg-brand/30 text-white;
+  }
+
+  /* Tailwind v4 resets button cursors to `default`. */
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
