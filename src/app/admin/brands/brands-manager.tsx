@@ -51,9 +51,9 @@ export function BrandsManager({
         confirmLabel="Delete brand"
         description={
           <>
-            <b className="text-white">{deleting?.displayName}</b> and its logo will be permanently
-            deleted. A brand that still has models can&apos;t be deleted — remove or reassign those
-            models first.
+            <b className="text-white">{deleting?.displayName}</b> and its logo
+            will be permanently deleted. A brand that still has models
+            can&apos;t be deleted — remove or reassign those models first.
           </>
         }
         onConfirm={() => deleteBrand(deleting?._id ?? "")}

@@ -14,7 +14,6 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
   const params = await searchParams;
   const next = safeRedirectPath(firstParam(params.next)) ?? undefined;
 
-  // Already signed in with a valid session: skip the form.
   if (await getCurrentAdmin()) redirect(next ?? DASHBOARD_PATH);
 
   const passwordReset = firstParam(params.reset) === "1";
@@ -32,7 +31,9 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
               Your password has been reset. Sign in with your new password.
             </FormAlert>
           ) : (
-            <FormAlert tone="info">Your session has expired. Please sign in again.</FormAlert>
+            <FormAlert tone="info">
+              Your session has expired. Please sign in again.
+            </FormAlert>
           )}
         </div>
       )}

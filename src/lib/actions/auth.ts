@@ -1,7 +1,12 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { DASHBOARD_PATH, LOGIN_PATH, PASSWORD_MAX, PASSWORD_MIN } from "@/lib/constants";
+import {
+  DASHBOARD_PATH,
+  LOGIN_PATH,
+  PASSWORD_MAX,
+  PASSWORD_MIN,
+} from "@/lib/constants";
 import { readText } from "@/lib/server/action-utils";
 import { api, ApiError, apiRequest } from "@/lib/server/http";
 import { clearSession, storeSessionFrom } from "@/lib/server/session";
@@ -31,21 +36,29 @@ function friendlyError(error: ApiError) {
     : error.message;
 }
 
-export async function login(_state: AuthFormState, formData: FormData): Promise<AuthFormState> {
+export async function login(
+  _state: AuthFormState,
+  formData: FormData,
+): Promise<AuthFormState> {
   const email = readText(formData, "email");
   const password = readPassword(formData, "password");
 
-  if (!email || !password) return { error: "Email and password are required.", email };
+  if (!email || !password)
+    return { error: "Email and password are required.", email };
 
   try {
-    const { data, response } = await apiRequest<LoginResponse>("/admin/auth/login", {
-      method: "POST",
-      body: { email, password },
-      onUnauthorized: "throw",
-    });
+    const { data, response } = await apiRequest<LoginResponse>(
+      "/admin/auth/login",
+      {
+        method: "POST",
+        body: { email, password },
+        onUnauthorized: "throw",
+      },
+    );
     await storeSessionFrom(response, data.accessToken);
   } catch (error) {
-    if (error instanceof ApiError) return { error: friendlyError(error), email };
+    if (error instanceof ApiError)
+      return { error: friendlyError(error), email };
     throw error;
   }
 
@@ -54,9 +67,11 @@ export async function login(_state: AuthFormState, formData: FormData): Promise<
 
 export async function logout() {
   try {
-    await api("/admin/auth/logout", { method: "POST", onUnauthorized: "throw" });
+    await api("/admin/auth/logout", {
+      method: "POST",
+      onUnauthorized: "throw",
+    });
   } catch (error) {
-    // The local session is cleared regardless of whether the API call worked.
     if (!(error instanceof ApiError)) throw error;
   }
 
@@ -78,7 +93,8 @@ export async function requestPasswordReset(
       onUnauthorized: "throw",
     });
   } catch (error) {
-    if (error instanceof ApiError) return { error: friendlyError(error), email };
+    if (error instanceof ApiError)
+      return { error: friendlyError(error), email };
     throw error;
   }
 
@@ -87,17 +103,22 @@ export async function requestPasswordReset(
 
 export async function resendResetCode(email: string): Promise<ActionResult> {
   const address = typeof email === "string" ? email.trim() : "";
-  if (!address) return { ok: false, error: "Email address is missing. Start again." };
+  if (!address)
+    return { ok: false, error: "Email address is missing. Start again." };
 
   try {
-    const { message } = await api<MessageResponse>("/admin/auth/forgot-password", {
-      method: "POST",
-      body: { email: address },
-      onUnauthorized: "throw",
-    });
+    const { message } = await api<MessageResponse>(
+      "/admin/auth/forgot-password",
+      {
+        method: "POST",
+        body: { email: address },
+        onUnauthorized: "throw",
+      },
+    );
     return { ok: true, message };
   } catch (error) {
-    if (error instanceof ApiError) return { ok: false, error: friendlyError(error) };
+    if (error instanceof ApiError)
+      return { ok: false, error: friendlyError(error) };
     throw error;
   }
 }
@@ -107,13 +128,16 @@ export async function resetPassword(
   formData: FormData,
 ): Promise<AuthFormState> {
   const email = readText(formData, "email");
-  // Keep the code a string so leading zeros survive.
   const otp = readText(formData, "otp");
   const newPassword = readPassword(formData, "newPassword");
 
-  if (!/^\d{6}$/.test(otp)) return { error: "Enter the 6-digit code from the email.", email, otp };
+  if (!/^\d{6}$/.test(otp))
+    return { error: "Enter the 6-digit code from the email.", email, otp };
 
-  const passwordError = checkNewPassword(newPassword, readPassword(formData, "confirmPassword"));
+  const passwordError = checkNewPassword(
+    newPassword,
+    readPassword(formData, "confirmPassword"),
+  );
   if (passwordError) return { error: passwordError, email, otp };
 
   try {
@@ -123,26 +147,35 @@ export async function resetPassword(
       onUnauthorized: "throw",
     });
   } catch (error) {
-    if (error instanceof ApiError) return { error: friendlyError(error), email, otp };
+    if (error instanceof ApiError)
+      return { error: friendlyError(error), email, otp };
     throw error;
   }
 
-  // Resetting signs out every session, including this browser's.
   await clearSession();
   redirect(`${LOGIN_PATH}?reset=1`);
 }
 
-export async function changePassword(formData: FormData): Promise<ActionResult> {
+export async function changePassword(
+  formData: FormData,
+): Promise<ActionResult> {
   const currentPassword = readPassword(formData, "currentPassword");
   const newPassword = readPassword(formData, "newPassword");
 
-  if (!currentPassword) return { ok: false, error: "Current password is required." };
+  if (!currentPassword)
+    return { ok: false, error: "Current password is required." };
 
-  const passwordError = checkNewPassword(newPassword, readPassword(formData, "confirmPassword"));
+  const passwordError = checkNewPassword(
+    newPassword,
+    readPassword(formData, "confirmPassword"),
+  );
   if (passwordError) return { ok: false, error: passwordError };
 
   if (newPassword === currentPassword) {
-    return { ok: false, error: "New password must be different from the current password." };
+    return {
+      ok: false,
+      error: "New password must be different from the current password.",
+    };
   }
 
   try {
@@ -150,11 +183,11 @@ export async function changePassword(formData: FormData): Promise<ActionResult> 
       "/admin/auth/change-password",
       { method: "PATCH", body: { currentPassword, newPassword } },
     );
-    // The API issues a fresh cookie so this browser stays signed in.
     await storeSessionFrom(response);
     return { ok: true, message: data.message };
   } catch (error) {
-    if (error instanceof ApiError) return { ok: false, error: friendlyError(error) };
+    if (error instanceof ApiError)
+      return { ok: false, error: friendlyError(error) };
     throw error;
   }
 }

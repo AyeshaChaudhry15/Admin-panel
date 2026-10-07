@@ -8,18 +8,29 @@ import { cn } from "@/lib/utils";
 interface StatCardProps {
   icon: LucideIcon;
   label: string;
-  /** `null` when the number couldn't be loaded. */
   value: number | null;
   hint?: React.ReactNode;
   tone?: Tone;
   href?: string;
 }
 
-export function StatCard({ icon: Icon, label, value, hint, tone = "brand", href }: StatCardProps) {
+export function StatCard({
+  icon: Icon,
+  label,
+  value,
+  hint,
+  tone = "brand",
+  href,
+}: StatCardProps) {
   const content = (
     <>
       <div className="flex items-start justify-between">
-        <span className={cn("flex size-11 items-center justify-center rounded-xl", toneTile[tone])}>
+        <span
+          className={cn(
+            "flex size-11 items-center justify-center rounded-xl",
+            toneTile[tone],
+          )}
+        >
           <Icon className="size-5" />
         </span>
         {href && (
@@ -54,5 +65,9 @@ export function StatCard({ icon: Icon, label, value, hint, tone = "brand", href 
 }
 
 export function StatGrid({ children }: { children: React.ReactNode }) {
-  return <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">{children}</div>;
+  return (
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      {children}
+    </div>
+  );
 }

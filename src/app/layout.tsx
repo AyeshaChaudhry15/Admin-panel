@@ -14,7 +14,8 @@ export const metadata: Metadata = {
     template: "%s | EVINN Admin",
     default: "EVINN Admin",
   },
-  description: "Manage the EVINN electric mobility catalog, orders and customer requests.",
+  description:
+    "Manage the EVINN electric mobility catalog, orders and customer requests.",
   robots: { index: false, follow: false },
 };
 
@@ -23,9 +24,11 @@ export const viewport: Viewport = {
   colorScheme: "dark",
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${inter.variable} [scrollbar-gutter:stable]`}>
+    <html lang="en" className={`${inter.variable} scrollbar-gutter-stable`}>
       <body className="min-h-dvh">
         <Providers>{children}</Providers>
       </body>

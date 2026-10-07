@@ -23,10 +23,11 @@ const LINKS = [
   { key: "facebookUrl", label: "FB" },
 ] as const;
 
-/** Only real web links are rendered (existing data uses "#" as a placeholder). */
 const hasLink = (value: string) => /^https?:\/\//i.test(value);
 
-export default async function BrandsPage({ searchParams }: PageProps<"/admin/brands">) {
+export default async function BrandsPage({
+  searchParams,
+}: PageProps<"/admin/brands">) {
   const params = await searchParams;
   const query = firstParam(params.q)?.trim() ?? "";
   const brands = await getBrands();
@@ -40,8 +41,12 @@ export default async function BrandsPage({ searchParams }: PageProps<"/admin/bra
       )
     : brands;
 
-  const origins = new Set(brands.map((brand) => brand.origin.trim().toLowerCase()).filter(Boolean));
-  const incomplete = brands.filter((brand) => !brand.about || !brand.origin).length;
+  const origins = new Set(
+    brands.map((brand) => brand.origin.trim().toLowerCase()).filter(Boolean),
+  );
+  const incomplete = brands.filter(
+    (brand) => !brand.about || !brand.origin,
+  ).length;
 
   return (
     <BrandsManager initialCreate={firstParam(params.new) === "1"}>
@@ -56,7 +61,12 @@ export default async function BrandsPage({ searchParams }: PageProps<"/admin/bra
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <StatCard icon={Tag} label="Total brands" value={brands.length} />
-          <StatCard icon={Globe} tone="info" label="Places of origin" value={origins.size} />
+          <StatCard
+            icon={Globe}
+            tone="info"
+            label="Places of origin"
+            value={origins.size}
+          />
           <StatCard
             icon={FileWarning}
             tone="warning"
@@ -109,7 +119,7 @@ export default async function BrandsPage({ searchParams }: PageProps<"/admin/bra
 
 function BrandsTable({ brands }: { brands: Brand[] }) {
   return (
-    <Table className="min-w-[820px]">
+    <Table className="min-w-205">
       <TableHead>
         <TH>Brand</TH>
         <TH>Headquarters</TH>
@@ -126,15 +136,27 @@ function BrandsTable({ brands }: { brands: Brand[] }) {
             <TR key={brand._id}>
               <TD>
                 <div className="flex items-center gap-3">
-                  <Thumbnail src={brand.logoUrl} alt={`${brand.displayName} logo`} fallback={Tag} />
+                  <Thumbnail
+                    src={brand.logoUrl}
+                    alt={`${brand.displayName} logo`}
+                    fallback={Tag}
+                  />
                   <div className="min-w-0">
-                    <p className="font-semibold text-white">{brand.displayName}</p>
-                    <p className="mt-0.5 text-xs text-muted">{brand.origin || "Origin not set"}</p>
+                    <p className="font-semibold text-white">
+                      {brand.displayName}
+                    </p>
+                    <p className="mt-0.5 text-xs text-muted">
+                      {brand.origin || "Origin not set"}
+                    </p>
                   </div>
                 </div>
               </TD>
-              <TD>{brand.headquarters || <span className="text-subtle">—</span>}</TD>
-              <TD>{brand.established || <span className="text-subtle">—</span>}</TD>
+              <TD>
+                {brand.headquarters || <span className="text-subtle">—</span>}
+              </TD>
+              <TD>
+                {brand.established || <span className="text-subtle">—</span>}
+              </TD>
               <TD>
                 {links.length === 0 ? (
                   <span className="text-subtle">—</span>
@@ -154,7 +176,9 @@ function BrandsTable({ brands }: { brands: Brand[] }) {
                   </div>
                 )}
               </TD>
-              <TD className="whitespace-nowrap text-muted">{formatDate(brand.updatedAt)}</TD>
+              <TD className="whitespace-nowrap text-muted">
+                {formatDate(brand.updatedAt)}
+              </TD>
               <TD align="right">
                 <RowActions item={brand} name={brand.displayName} />
               </TD>

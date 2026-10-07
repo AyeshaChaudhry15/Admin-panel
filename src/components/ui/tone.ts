@@ -1,6 +1,5 @@
 import type { Tone } from "@/lib/constants";
 
-/** Tinted icon tile per tone. Kept as literal strings so Tailwind can see them. */
 export const toneTile: Record<Tone, string> = {
   brand: "bg-brand/10 text-brand",
   info: "bg-info/10 text-info",

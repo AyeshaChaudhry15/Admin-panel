@@ -14,7 +14,8 @@ const variants: Record<Variant, string> = {
     "border border-line-strong bg-surface-raised text-ink-soft hover:border-subtle hover:text-white",
   ghost: "text-muted hover:bg-white/5 hover:text-white",
   danger: "bg-danger text-white hover:bg-danger/85",
-  "danger-soft": "border border-danger/25 bg-danger/10 text-danger hover:bg-danger/20",
+  "danger-soft":
+    "border border-danger/25 bg-danger/10 text-danger hover:bg-danger/20",
 };
 
 const sizes: Record<Size, string> = {
@@ -34,7 +35,6 @@ export function buttonStyles({
 interface ButtonProps extends React.ComponentProps<"button"> {
   variant?: Variant;
   size?: Size;
-  /** Shows a spinner and disables the button. */
   pending?: boolean;
 }
 

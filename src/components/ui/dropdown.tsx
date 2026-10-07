@@ -5,17 +5,20 @@ import { useEffect, useId, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 interface DropdownProps {
-  /** Accessible name for the trigger button. */
   label: string;
   trigger: React.ReactNode;
   triggerClassName?: string;
   panelClassName?: string;
-  /** Receives `close` so items can dismiss the menu. */
   children: (close: () => void) => React.ReactNode;
 }
 
-/** Trigger + floating panel that closes on outside click, Escape or item selection. */
-export function Dropdown({ label, trigger, triggerClassName, panelClassName, children }: DropdownProps) {
+export function Dropdown({
+  label,
+  trigger,
+  triggerClassName,
+  panelClassName,
+  children,
+}: DropdownProps) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -66,7 +69,12 @@ export function Dropdown({ label, trigger, triggerClassName, panelClassName, chi
             id={panelId}
             initial={{ opacity: 0, y: -6, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -6, scale: 0.97, transition: { duration: 0.12 } }}
+            exit={{
+              opacity: 0,
+              y: -6,
+              scale: 0.97,
+              transition: { duration: 0.12 },
+            }}
             transition={{ type: "spring", stiffness: 500, damping: 34 }}
             style={{ transformOrigin: "top right" }}
             className={cn(

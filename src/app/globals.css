@@ -4,7 +4,6 @@
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
-/* EVINN admin theme: deep navy surfaces with the brand's electric green. */
 @theme {
   --color-canvas: #071018;
   --color-sidebar: #061521;
@@ -44,7 +43,6 @@
     @apply bg-brand/30 text-white;
   }
 
-  /* Tailwind v4 resets button cursors to `default`. */
   button:not(:disabled),
   [role="button"]:not(:disabled) {
     cursor: pointer;

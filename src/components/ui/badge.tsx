@@ -9,7 +9,12 @@ interface BadgeProps {
   children: React.ReactNode;
 }
 
-export function Badge({ tone = "neutral", dot = false, className, children }: BadgeProps) {
+export function Badge({
+  tone = "neutral",
+  dot = false,
+  className,
+  children,
+}: BadgeProps) {
   return (
     <span
       className={cn(
@@ -18,7 +23,12 @@ export function Badge({ tone = "neutral", dot = false, className, children }: Ba
         className,
       )}
     >
-      {dot && <span aria-hidden className={cn("size-1.5 rounded-full", toneDot[tone])} />}
+      {dot && (
+        <span
+          aria-hidden
+          className={cn("size-1.5 rounded-full", toneDot[tone])}
+        />
+      )}
       {children}
     </span>
   );

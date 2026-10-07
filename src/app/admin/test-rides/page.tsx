@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { Bike, CalendarCheck, Mail, MessageCircle, SearchX } from "lucide-react";
+import {
+  Bike,
+  CalendarCheck,
+  Mail,
+  MessageCircle,
+  SearchX,
+} from "lucide-react";
 import { Suspense } from "react";
 import { TestRideActions } from "@/app/admin/test-rides/test-ride-actions";
 import { Badge } from "@/components/ui/badge";
@@ -13,7 +19,12 @@ import { TableSkeleton } from "@/components/ui/skeleton";
 import { Table, TableHead, TD, TH, TR } from "@/components/ui/table";
 import { Thumbnail } from "@/components/ui/thumbnail";
 import { TEST_RIDE_STATUS_TONE, TEST_RIDE_STATUSES } from "@/lib/constants";
-import { capitalize, formatCalendarDate, formatDate, formatTime } from "@/lib/format";
+import {
+  capitalize,
+  formatCalendarDate,
+  formatDate,
+  formatTime,
+} from "@/lib/format";
 import { getTestRideRequests } from "@/lib/server/queries";
 import { hrefWith, parseOneOf, parsePage } from "@/lib/search-params";
 import { whatsAppUrl } from "@/lib/utils";
@@ -23,12 +34,15 @@ export const metadata: Metadata = { title: "Test Rides" };
 
 const PATH = "/admin/test-rides";
 
-export default async function TestRidesPage({ searchParams }: PageProps<"/admin/test-rides">) {
+export default async function TestRidesPage({
+  searchParams,
+}: PageProps<"/admin/test-rides">) {
   const params = await searchParams;
   const page = parsePage(params.page);
   const status = parseOneOf(params.status, TEST_RIDE_STATUSES);
   const current = { status, page: page > 1 ? String(page) : undefined };
-  const statusHref = (value: string | null) => hrefWith(PATH, current, { status: value, page: null });
+  const statusHref = (value: string | null) =>
+    hrefWith(PATH, current, { status: value, page: null });
 
   return (
     <div className="space-y-6">
@@ -50,17 +64,25 @@ export default async function TestRidesPage({ searchParams }: PageProps<"/admin/
               activeHref={statusHref(status ?? null)}
               tabs={[
                 { label: "All", href: statusHref(null) },
-                ...TEST_RIDE_STATUSES.map((value) => ({ label: capitalize(value), href: statusHref(value) })),
+                ...TEST_RIDE_STATUSES.map((value) => ({
+                  label: capitalize(value),
+                  href: statusHref(value),
+                })),
               ]}
             />
           }
         />
 
-        <Suspense key={`${status}-${page}`} fallback={<TableSkeleton columns={6} />}>
+        <Suspense
+          key={`${status}-${page}`}
+          fallback={<TableSkeleton columns={6} />}
+        >
           <TestRidesTable
             page={page}
             status={status}
-            hrefForPage={(target) => hrefWith(PATH, current, { page: target > 1 ? target : null })}
+            hrefForPage={(target) =>
+              hrefWith(PATH, current, { page: target > 1 ? target : null })
+            }
           />
         </Suspense>
       </Panel>
@@ -77,15 +99,26 @@ async function TestRidesTable({
   status: TestRideStatus | undefined;
   hrefForPage: (page: number) => string;
 }) {
-  const { testRideRequests: requests, pagination } = await getTestRideRequests({ page, status });
+  const { testRideRequests: requests, pagination } = await getTestRideRequests({
+    page,
+    status,
+  });
 
-  if (requests.length === 0 && pagination.totalPages > 0 && page > pagination.totalPages) {
+  if (
+    requests.length === 0 &&
+    pagination.totalPages > 0 &&
+    page > pagination.totalPages
+  ) {
     redirect(hrefForPage(pagination.totalPages));
   }
 
   if (requests.length === 0) {
     return status ? (
-      <EmptyState icon={SearchX} title={`No ${status} requests`} description="Try another status." />
+      <EmptyState
+        icon={SearchX}
+        title={`No ${status} requests`}
+        description="Try another status."
+      />
     ) : (
       <EmptyState
         icon={CalendarCheck}
@@ -97,7 +130,7 @@ async function TestRidesTable({
 
   return (
     <>
-      <Table className="min-w-[940px]">
+      <Table className="min-w-235">
         <TableHead>
           <TH>Requester</TH>
           <TH>Bike</TH>
@@ -110,7 +143,9 @@ async function TestRidesTable({
           {requests.map((request) => (
             <TR key={request._id}>
               <TD>
-                <p className="font-medium text-white">{request.requesterName}</p>
+                <p className="font-medium text-white">
+                  {request.requesterName}
+                </p>
                 <div className="mt-1.5 flex flex-wrap gap-1.5">
                   <a
                     href={whatsAppUrl(request.requesterWhatsApp)}
@@ -134,15 +169,26 @@ async function TestRidesTable({
               </TD>
               <TD>
                 <div className="flex items-center gap-3">
-                  <Thumbnail src={request.bike?.imageUrl} alt="" fallback={Bike} size="sm" />
+                  <Thumbnail
+                    src={request.bike?.imageUrl}
+                    alt=""
+                    fallback={Bike}
+                    size="sm"
+                  />
                   <div className="min-w-0">
-                    <p className="text-white">{request.bike?.name ?? "Deleted bike"}</p>
-                    <p className="mt-0.5 text-xs text-muted">{request.brand?.displayName ?? "—"}</p>
+                    <p className="text-white">
+                      {request.bike?.name ?? "Deleted bike"}
+                    </p>
+                    <p className="mt-0.5 text-xs text-muted">
+                      {request.brand?.displayName ?? "—"}
+                    </p>
                   </div>
                 </div>
               </TD>
               <TD>
-                <p className="whitespace-nowrap text-white">{formatCalendarDate(request.preferredDate)}</p>
+                <p className="whitespace-nowrap text-white">
+                  {formatCalendarDate(request.preferredDate)}
+                </p>
                 <p className="mt-0.5 text-xs text-muted">
                   {formatTime(request.preferredTime)} · {request.preferredCity}
                 </p>
@@ -152,12 +198,17 @@ async function TestRidesTable({
                   {capitalize(request.status)}
                 </Badge>
                 {request.rejectionReason && (
-                  <p className="mt-1.5 line-clamp-2 max-w-56 text-xs text-muted" title={request.rejectionReason}>
+                  <p
+                    className="mt-1.5 line-clamp-2 max-w-56 text-xs text-muted"
+                    title={request.rejectionReason}
+                  >
                     {request.rejectionReason}
                   </p>
                 )}
               </TD>
-              <TD className="whitespace-nowrap text-muted">{formatDate(request.createdAt)}</TD>
+              <TD className="whitespace-nowrap text-muted">
+                {formatDate(request.createdAt)}
+              </TD>
               <TD align="right">
                 {request.status === "pending" ? (
                   <TestRideActions request={request} />
@@ -169,7 +220,11 @@ async function TestRidesTable({
           ))}
         </tbody>
       </Table>
-      <Pagination pagination={pagination} noun="requests" hrefForPage={hrefForPage} />
+      <Pagination
+        pagination={pagination}
+        noun="requests"
+        hrefForPage={hrefForPage}
+      />
     </>
   );
 }

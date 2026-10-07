@@ -9,18 +9,22 @@ import { PasswordInput } from "@/components/ui/password-input";
 import { resendResetCode, resetPassword } from "@/lib/actions/auth";
 import { PASSWORD_MAX, PASSWORD_MIN } from "@/lib/constants";
 
-/** The API sends at most one code per minute. */
 const RESEND_COOLDOWN = 60;
 
 export function ResetPasswordForm({ email }: { email?: string }) {
   const [state, formAction, pending] = useActionState(resetPassword, { email });
   const [cooldown, setCooldown] = useState(email ? RESEND_COOLDOWN : 0);
   const [resending, startResend] = useTransition();
-  const [notice, setNotice] = useState<{ ok: boolean; text: string } | null>(null);
+  const [notice, setNotice] = useState<{ ok: boolean; text: string } | null>(
+    null,
+  );
 
   useEffect(() => {
     if (cooldown <= 0) return;
-    const timer = window.setTimeout(() => setCooldown((value) => value - 1), 1000);
+    const timer = window.setTimeout(
+      () => setCooldown((value) => value - 1),
+      1000,
+    );
     return () => window.clearTimeout(timer);
   }, [cooldown]);
 
@@ -42,7 +46,11 @@ export function ResetPasswordForm({ email }: { email?: string }) {
     <form action={formAction} className="space-y-5">
       <input type="hidden" name="email" value={email ?? ""} />
 
-      <Field label="6-digit code" htmlFor="otp" hint="The code expires 10 minutes after it was sent.">
+      <Field
+        label="6-digit code"
+        htmlFor="otp"
+        hint="The code expires 10 minutes after it was sent."
+      >
         <Input
           id="otp"
           name="otp"
@@ -85,7 +93,11 @@ export function ResetPasswordForm({ email }: { email?: string }) {
       </Field>
 
       {state.error && <FormAlert>{state.error}</FormAlert>}
-      {notice && <FormAlert tone={notice.ok ? "success" : "danger"}>{notice.text}</FormAlert>}
+      {notice && (
+        <FormAlert tone={notice.ok ? "success" : "danger"}>
+          {notice.text}
+        </FormAlert>
+      )}
 
       <Button type="submit" pending={pending} className="w-full">
         {!pending && <KeyRound />}
@@ -101,10 +113,17 @@ export function ResetPasswordForm({ email }: { email?: string }) {
             disabled={cooldown > 0 || resending}
             className="font-medium text-info transition-colors hover:text-white disabled:cursor-not-allowed disabled:text-subtle"
           >
-            {resending ? "Sending…" : cooldown > 0 ? `Resend in ${cooldown}s` : "Resend code"}
+            {resending
+              ? "Sending…"
+              : cooldown > 0
+                ? `Resend in ${cooldown}s`
+                : "Resend code"}
           </button>
         ) : (
-          <Link href="/forgot-password" className="font-medium text-info hover:text-white">
+          <Link
+            href="/forgot-password"
+            className="font-medium text-info hover:text-white"
+          >
             Request a code
           </Link>
         )}

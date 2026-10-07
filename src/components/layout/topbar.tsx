@@ -27,7 +27,12 @@ interface TopbarProps {
   onOpenMenu: () => void;
 }
 
-export function Topbar({ admin, countsPromise, menuOpen, onOpenMenu }: TopbarProps) {
+export function Topbar({
+  admin,
+  countsPromise,
+  menuOpen,
+  onOpenMenu,
+}: TopbarProps) {
   const pathname = usePathname();
   const current = findNavItem(pathname);
 
@@ -47,8 +52,12 @@ export function Topbar({ admin, countsPromise, menuOpen, onOpenMenu }: TopbarPro
 
         {current && (
           <p className="truncate text-sm">
-            <span className="hidden text-subtle sm:inline">{current.section} / </span>
-            <span className="font-medium text-ink-soft">{current.item.label}</span>
+            <span className="hidden text-subtle sm:inline">
+              {current.section} /{" "}
+            </span>
+            <span className="font-medium text-ink-soft">
+              {current.item.label}
+            </span>
           </p>
         )}
       </div>
@@ -82,25 +91,32 @@ const NOTIFICATIONS = [
     href: "/admin/orders?status=pending",
     icon: ShoppingBag,
     tone: "warning",
-    label: (count: number) => `${count} new ${count === 1 ? "order" : "orders"} to confirm`,
+    label: (count: number) =>
+      `${count} new ${count === 1 ? "order" : "orders"} to confirm`,
   },
   {
     key: "testRides",
     href: "/admin/test-rides?status=pending",
     icon: CalendarCheck,
     tone: "violet",
-    label: (count: number) => `${count} test ride ${count === 1 ? "request" : "requests"} to review`,
+    label: (count: number) =>
+      `${count} test ride ${count === 1 ? "request" : "requests"} to review`,
   },
   {
     key: "messages",
     href: "/admin/messages?status=pending",
     icon: MessageSquare,
     tone: "info",
-    label: (count: number) => `${count} unanswered ${count === 1 ? "message" : "messages"}`,
+    label: (count: number) =>
+      `${count} unanswered ${count === 1 ? "message" : "messages"}`,
   },
 ] as const;
 
-function Notifications({ countsPromise }: { countsPromise: Promise<PendingCounts> }) {
+function Notifications({
+  countsPromise,
+}: {
+  countsPromise: Promise<PendingCounts>;
+}) {
   const counts = use(countsPromise);
   const items = NOTIFICATIONS.filter((item) => (counts[item.key] ?? 0) > 0);
   const total = items.reduce((sum, item) => sum + (counts[item.key] ?? 0), 0);
@@ -116,11 +132,15 @@ function Notifications({ countsPromise }: { countsPromise: Promise<PendingCounts
         <div>
           <div className="border-b border-line px-4 py-3">
             <p className="text-sm font-semibold text-white">Notifications</p>
-            <p className="text-xs text-muted">Requests waiting for your review</p>
+            <p className="text-xs text-muted">
+              Requests waiting for your review
+            </p>
           </div>
 
           {items.length === 0 ? (
-            <p className="px-4 py-6 text-center text-sm text-muted">You&apos;re all caught up.</p>
+            <p className="px-4 py-6 text-center text-sm text-muted">
+              You&apos;re all caught up.
+            </p>
           ) : (
             <ul className="p-1.5">
               {items.map((item) => {
@@ -164,7 +184,9 @@ function UserMenu({ admin }: { admin: Admin }) {
           <span className="flex size-9 items-center justify-center rounded-full border border-brand/30 bg-brand/10 text-xs font-bold text-brand">
             {initials(admin.fullName)}
           </span>
-          <span className="hidden max-w-36 truncate font-medium md:inline">{admin.fullName}</span>
+          <span className="hidden max-w-36 truncate font-medium md:inline">
+            {admin.fullName}
+          </span>
           <ChevronDown className="hidden size-4 text-muted sm:block" />
         </>
       }
@@ -172,7 +194,9 @@ function UserMenu({ admin }: { admin: Admin }) {
       {(close) => (
         <div>
           <div className="border-b border-line px-4 py-3">
-            <p className="truncate text-sm font-semibold text-white">{admin.fullName}</p>
+            <p className="truncate text-sm font-semibold text-white">
+              {admin.fullName}
+            </p>
             <p className="truncate text-xs text-muted">{admin.email}</p>
           </div>
           <div className="p-1.5">

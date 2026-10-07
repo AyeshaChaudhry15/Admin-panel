@@ -28,24 +28,36 @@ import { STORE_KINDS, type StoreKind } from "@/lib/store-kinds";
 const STOCK_FILTERS = ["in", "out"] as const;
 
 /** Full list page shared by Accessories and Spare Parts. */
-export function StoreItemsPage({ kind, params }: { kind: StoreKind; params: SearchParams }) {
+export function StoreItemsPage({
+  kind,
+  params,
+}: {
+  kind: StoreKind;
+  params: SearchParams;
+}) {
   const config = STORE_KINDS[kind];
   const Icon = kind === "accessories" ? Package : Wrench;
 
   const page = parsePage(params.page);
   const stock = parseOneOf(params.stock, STOCK_FILTERS);
   const current = { stock, page: page > 1 ? String(page) : undefined };
-  const stockHref = (value: string | null) => hrefWith(config.href, current, { stock: value, page: null });
+  const stockHref = (value: string | null) =>
+    hrefWith(config.href, current, { stock: value, page: null });
 
   return (
-    <StoreItemsManager kind={kind} initialCreate={firstParam(params.new) === "1"}>
+    <StoreItemsManager
+      kind={kind}
+      initialCreate={firstParam(params.new) === "1"}
+    >
       <div className="space-y-6">
         <PageHeader
           icon={Icon}
           eyebrow="Catalog"
           title={config.title}
           description={config.description}
-          actions={<CreateButton label={`Add ${capitalize(config.singular)}`} />}
+          actions={
+            <CreateButton label={`Add ${capitalize(config.singular)}`} />
+          }
         />
 
         <SectionBoundary title={`${config.plural} stats`}>
@@ -72,13 +84,18 @@ export function StoreItemsPage({ kind, params }: { kind: StoreKind; params: Sear
             }
           />
 
-          <Suspense key={`${stock}-${page}`} fallback={<TableSkeleton columns={6} />}>
+          <Suspense
+            key={`${stock}-${page}`}
+            fallback={<TableSkeleton columns={6} />}
+          >
             <StoreItemsTable
               kind={kind}
               page={page}
               stock={stock}
               hrefForPage={(target) =>
-                hrefWith(config.href, current, { page: target > 1 ? target : null })
+                hrefWith(config.href, current, {
+                  page: target > 1 ? target : null,
+                })
               }
             />
           </Suspense>
@@ -99,8 +116,17 @@ async function StockStats({ kind }: { kind: StoreKind }) {
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-      <StatCard icon={kind === "accessories" ? Package : Wrench} label={`Total ${title.toLowerCase()}`} value={total} />
-      <StatCard icon={CircleCheck} label="In stock" value={available} href={`${href}?stock=in`} />
+      <StatCard
+        icon={kind === "accessories" ? Package : Wrench}
+        label={`Total ${title.toLowerCase()}`}
+        value={total}
+      />
+      <StatCard
+        icon={CircleCheck}
+        label="In stock"
+        value={available}
+        href={`${href}?stock=in`}
+      />
       <StatCard
         icon={CircleX}
         tone="danger"
@@ -130,7 +156,11 @@ async function StoreItemsTable({
     inStock: stock ? stock === "in" : undefined,
   });
 
-  if (items.length === 0 && pagination.totalPages > 0 && page > pagination.totalPages) {
+  if (
+    items.length === 0 &&
+    pagination.totalPages > 0 &&
+    page > pagination.totalPages
+  ) {
     redirect(hrefForPage(pagination.totalPages));
   }
 
@@ -153,7 +183,7 @@ async function StoreItemsTable({
 
   return (
     <>
-      <Table className="min-w-[880px]">
+      <Table className="min-w-220">
         <TableHead>
           <TH>{capitalize(config.singular)}</TH>
           <TH>Price</TH>
@@ -166,11 +196,19 @@ async function StoreItemsTable({
             <TR key={item._id}>
               <TD>
                 <div className="flex items-center gap-3">
-                  <Thumbnail src={item.imageUrl} alt={item.name} fallback={Icon} />
+                  <Thumbnail
+                    src={item.imageUrl}
+                    alt={item.name}
+                    fallback={Icon}
+                  />
                   <div className="max-w-64 min-w-0">
                     <p className="font-semibold text-white">{item.name}</p>
                     <p className="mt-0.5 truncate text-xs text-muted">
-                      {item.description || <span className="font-mono text-subtle">/{item.slug}</span>}
+                      {item.description || (
+                        <span className="font-mono text-subtle">
+                          /{item.slug}
+                        </span>
+                      )}
                     </p>
                   </div>
                 </div>
@@ -211,7 +249,11 @@ async function StoreItemsTable({
           ))}
         </tbody>
       </Table>
-      <Pagination pagination={pagination} noun={config.plural} hrefForPage={hrefForPage} />
+      <Pagination
+        pagination={pagination}
+        noun={config.plural}
+        hrefForPage={hrefForPage}
+      />
     </>
   );
 }

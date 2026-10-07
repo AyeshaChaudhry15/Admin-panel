@@ -6,7 +6,6 @@ import { createContext, use, useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import type { ActionResult } from "@/types/actions";
 
-/** Which dialog a resource page is showing. */
 export type CrudState<T> =
   | { mode: "create" }
   | { mode: "edit"; item: T }
@@ -23,17 +22,16 @@ const CrudContext = createContext<CrudControls | null>(null);
 
 function useCrudControls() {
   const controls = use(CrudContext);
-  if (!controls) throw new Error("CRUD buttons must be rendered inside a resource manager.");
+  if (!controls)
+    throw new Error("CRUD buttons must be rendered inside a resource manager.");
   return controls;
 }
 
-/**
- * Dialog state for a resource page. `initialCreate` opens the create form on
- * load, which is how the dashboard's quick actions (`?new=1`) work.
- */
 export function useCrudDialogs<T>(initialCreate = false) {
   const router = useRouter();
-  const [state, setState] = useState<CrudState<T>>(initialCreate ? { mode: "create" } : null);
+  const [state, setState] = useState<CrudState<T>>(
+    initialCreate ? { mode: "create" } : null,
+  );
 
   const controls: CrudControls = {
     create: () => setState({ mode: "create" }),
@@ -44,7 +42,6 @@ export function useCrudDialogs<T>(initialCreate = false) {
   function close() {
     setState(null);
 
-    // Drop `?new=1` so a refresh doesn't reopen the form.
     const url = new URL(window.location.href);
     if (url.searchParams.has("new")) {
       url.searchParams.delete("new");
@@ -76,7 +73,6 @@ export function CreateButton({ label }: { label: string }) {
   );
 }
 
-/** Edit and delete buttons for a table row. `name` is used in the labels. */
 export function RowActions({ item, name }: { item: unknown; name: string }) {
   const { edit, remove } = useCrudControls();
 
@@ -104,10 +100,6 @@ export function RowActions({ item, name }: { item: unknown; name: string }) {
   );
 }
 
-/**
- * Submits a form through a Server Action from `onSubmit` rather than
- * `<form action>`, so a failed save keeps every field (and the picked file).
- */
 export function useFormSubmit(
   action: (formData: FormData) => Promise<ActionResult>,
   onSuccess: (message: string) => void,

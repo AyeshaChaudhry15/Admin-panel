@@ -13,22 +13,25 @@ import type {
   TestRideRequestResponse,
 } from "@/types/api";
 
-// Orders
-
-export async function updateOrderStatus(id: string, status: OrderStatus): Promise<ActionResult> {
+export async function updateOrderStatus(
+  id: string,
+  status: OrderStatus,
+): Promise<ActionResult> {
   return runAction(async () => {
-    if (!ORDER_STATUSES.includes(status)) throw new InputError("Unknown order status.");
+    if (!ORDER_STATUSES.includes(status))
+      throw new InputError("Unknown order status.");
 
-    const { order } = await api<OrderResponse>(`/orders/${assertId(id)}/status`, {
-      method: "PATCH",
-      body: { status },
-    });
+    const { order } = await api<OrderResponse>(
+      `/orders/${assertId(id)}/status`,
+      {
+        method: "PATCH",
+        body: { status },
+      },
+    );
 
     return `Order ${orderRef(order._id)} is now ${order.status}.`;
   });
 }
-
-// Test ride requests
 
 export async function acceptTestRide(id: string): Promise<ActionResult> {
   return runAction(async () => {
@@ -41,10 +44,14 @@ export async function acceptTestRide(id: string): Promise<ActionResult> {
   });
 }
 
-export async function rejectTestRide(id: string, reason: string): Promise<ActionResult> {
+export async function rejectTestRide(
+  id: string,
+  reason: string,
+): Promise<ActionResult> {
   return runAction(async () => {
     const rejectionReason = typeof reason === "string" ? reason.trim() : "";
-    if (!rejectionReason) throw new InputError("Please give a reason for rejecting this request.");
+    if (!rejectionReason)
+      throw new InputError("Please give a reason for rejecting this request.");
     if (rejectionReason.length > 1000) {
       throw new InputError("The reason can be at most 1000 characters.");
     }
@@ -58,14 +65,13 @@ export async function rejectTestRide(id: string, reason: string): Promise<Action
   });
 }
 
-// Contact submissions
-
 export async function updateContactStatus(
   id: string,
   status: ContactStatus,
 ): Promise<ActionResult> {
   return runAction(async () => {
-    if (!CONTACT_STATUSES.includes(status)) throw new InputError("Unknown message status.");
+    if (!CONTACT_STATUSES.includes(status))
+      throw new InputError("Unknown message status.");
 
     await api(`/contact-submissions/${assertId(id)}/status`, {
       method: "PATCH",
@@ -76,11 +82,16 @@ export async function updateContactStatus(
   });
 }
 
-export async function deleteContactSubmission(id: string): Promise<ActionResult> {
+export async function deleteContactSubmission(
+  id: string,
+): Promise<ActionResult> {
   return runAction(async () => {
-    const { message } = await api<MessageResponse>(`/contact-submissions/${assertId(id)}`, {
-      method: "DELETE",
-    });
+    const { message } = await api<MessageResponse>(
+      `/contact-submissions/${assertId(id)}`,
+      {
+        method: "DELETE",
+      },
+    );
     return message;
   });
 }

@@ -29,7 +29,10 @@ export function LoginForm({ next }: { next?: string }) {
 
       <div>
         <div className="mb-2 flex items-baseline justify-between gap-3">
-          <label htmlFor="password" className="text-sm font-medium text-ink-soft">
+          <label
+            htmlFor="password"
+            className="text-sm font-medium text-ink-soft"
+          >
             Password
           </label>
           <Link

@@ -76,7 +76,12 @@ export function ConfirmDialog({
         <Button variant="secondary" onClick={close} disabled={pending}>
           Cancel
         </Button>
-        <Button variant={variant} onClick={confirm} pending={pending} data-autofocus>
+        <Button
+          variant={variant}
+          onClick={confirm}
+          pending={pending}
+          data-autofocus
+        >
           {confirmLabel}
         </Button>
       </DialogFooter>

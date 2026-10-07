@@ -11,9 +11,18 @@ function SectionError({ title }: { title: string }, { retry }: ErrorInfo) {
       className="flex min-h-48 flex-col items-center justify-center rounded-2xl border border-line bg-surface p-8 text-center"
     >
       <CloudOff className="size-6 text-subtle" />
-      <p className="mt-3 text-sm font-semibold text-white">Couldn&apos;t load {title}</p>
-      <p className="mt-1 text-xs text-muted">The rest of the page is still available.</p>
-      <Button variant="secondary" size="sm" onClick={() => retry()} className="mt-4">
+      <p className="mt-3 text-sm font-semibold text-white">
+        Couldn&apos;t load {title}
+      </p>
+      <p className="mt-1 text-xs text-muted">
+        The rest of the page is still available.
+      </p>
+      <Button
+        variant="secondary"
+        size="sm"
+        onClick={() => retry()}
+        className="mt-4"
+      >
         <RotateCw />
         Try again
       </Button>
@@ -21,8 +30,4 @@ function SectionError({ title }: { title: string }, { retry }: ErrorInfo) {
   );
 }
 
-/**
- * Keeps a failing section from taking down the whole page. `redirect()` and
- * `notFound()` still work as usual inside it.
- */
 export const SectionBoundary = catchError(SectionError);

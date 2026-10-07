@@ -28,22 +28,18 @@ interface DialogProps {
   icon?: React.ReactNode;
   tone?: Tone;
   size?: keyof typeof sizes;
-  /** While true the dialog can't be dismissed (e.g. a save is in flight). */
   busy?: boolean;
   children: React.ReactNode;
 }
 
-/**
- * Accessible modal: focus is moved in and trapped, Escape and the backdrop
- * close it, page scroll is locked, and focus returns to the trigger on close.
- * On phones it slides up as a bottom sheet.
- */
 export function Dialog(props: DialogProps) {
   const isClient = useIsClient();
   if (!isClient) return null;
 
   return createPortal(
-    <AnimatePresence>{props.open && <DialogPanel {...props} />}</AnimatePresence>,
+    <AnimatePresence>
+      {props.open && <DialogPanel {...props} />}
+    </AnimatePresence>,
     document.body,
   );
 }
@@ -71,7 +67,6 @@ function DialogPanel({
 
     return () => {
       unlockScroll();
-      // Don't steal focus from another dialog that opened as this one closed.
       const active = document.activeElement;
       if (!active || active === document.body || panel?.contains(active)) {
         previouslyFocused?.focus();
@@ -92,7 +87,9 @@ function DialogPanel({
 
     if (event.key !== "Tab" || !panelRef.current) return;
 
-    const focusable = [...panelRef.current.querySelectorAll<HTMLElement>(FOCUSABLE)];
+    const focusable = [
+      ...panelRef.current.querySelectorAll<HTMLElement>(FOCUSABLE),
+    ];
     if (focusable.length === 0) return;
 
     const first = focusable[0];
@@ -102,7 +99,10 @@ function DialogPanel({
     if (event.shiftKey && (active === first || active === panelRef.current)) {
       event.preventDefault();
       last.focus();
-    } else if (!event.shiftKey && (active === last || active === panelRef.current)) {
+    } else if (
+      !event.shiftKey &&
+      (active === last || active === panelRef.current)
+    ) {
       event.preventDefault();
       first.focus();
     }
@@ -131,7 +131,12 @@ function DialogPanel({
         tabIndex={-1}
         initial={{ opacity: 0, y: 32, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: 24, scale: 0.98, transition: { duration: 0.15 } }}
+        exit={{
+          opacity: 0,
+          y: 24,
+          scale: 0.98,
+          transition: { duration: 0.15 },
+        }}
         transition={{ type: "spring", stiffness: 380, damping: 34 }}
         className={cn(
           "relative flex max-h-[92dvh] w-full flex-col overflow-hidden rounded-t-2xl border border-line-strong bg-surface shadow-[0_30px_100px_rgba(0,0,0,0.6)] outline-none sm:rounded-2xl",
@@ -180,9 +185,20 @@ function DialogPanel({
   );
 }
 
-export function DialogBody({ className, children }: { className?: string; children: React.ReactNode }) {
+export function DialogBody({
+  className,
+  children,
+}: {
+  className?: string;
+  children: React.ReactNode;
+}) {
   return (
-    <div className={cn("min-h-0 flex-1 overflow-y-auto px-5 py-5 sm:px-6", className)}>
+    <div
+      className={cn(
+        "min-h-0 flex-1 overflow-y-auto px-5 py-5 sm:px-6",
+        className,
+      )}
+    >
       {children}
     </div>
   );

@@ -22,12 +22,15 @@ export const metadata: Metadata = { title: "Orders" };
 
 const PATH = "/admin/orders";
 
-export default async function OrdersPage({ searchParams }: PageProps<"/admin/orders">) {
+export default async function OrdersPage({
+  searchParams,
+}: PageProps<"/admin/orders">) {
   const params = await searchParams;
   const page = parsePage(params.page);
   const status = parseOneOf(params.status, ORDER_STATUSES);
   const current = { status, page: page > 1 ? String(page) : undefined };
-  const statusHref = (value: string | null) => hrefWith(PATH, current, { status: value, page: null });
+  const statusHref = (value: string | null) =>
+    hrefWith(PATH, current, { status: value, page: null });
 
   return (
     <div className="space-y-6">
@@ -49,17 +52,25 @@ export default async function OrdersPage({ searchParams }: PageProps<"/admin/ord
               activeHref={statusHref(status ?? null)}
               tabs={[
                 { label: "All", href: statusHref(null) },
-                ...ORDER_STATUSES.map((value) => ({ label: capitalize(value), href: statusHref(value) })),
+                ...ORDER_STATUSES.map((value) => ({
+                  label: capitalize(value),
+                  href: statusHref(value),
+                })),
               ]}
             />
           }
         />
 
-        <Suspense key={`${status}-${page}`} fallback={<TableSkeleton columns={6} />}>
+        <Suspense
+          key={`${status}-${page}`}
+          fallback={<TableSkeleton columns={6} />}
+        >
           <OrdersTable
             page={page}
             status={status}
-            hrefForPage={(target) => hrefWith(PATH, current, { page: target > 1 ? target : null })}
+            hrefForPage={(target) =>
+              hrefWith(PATH, current, { page: target > 1 ? target : null })
+            }
           />
         </Suspense>
       </Panel>
@@ -78,13 +89,21 @@ async function OrdersTable({
 }) {
   const { orders, pagination } = await getOrders({ page, status });
 
-  if (orders.length === 0 && pagination.totalPages > 0 && page > pagination.totalPages) {
+  if (
+    orders.length === 0 &&
+    pagination.totalPages > 0 &&
+    page > pagination.totalPages
+  ) {
     redirect(hrefForPage(pagination.totalPages));
   }
 
   if (orders.length === 0) {
     return status ? (
-      <EmptyState icon={SearchX} title={`No ${status} orders`} description="Try another status." />
+      <EmptyState
+        icon={SearchX}
+        title={`No ${status} orders`}
+        description="Try another status."
+      />
     ) : (
       <EmptyState
         icon={ShoppingBag}
@@ -96,7 +115,7 @@ async function OrdersTable({
 
   return (
     <>
-      <Table className="min-w-[900px]">
+      <Table className="min-w-225">
         <TableHead>
           <TH>Order</TH>
           <TH>Customer</TH>
@@ -109,18 +128,30 @@ async function OrdersTable({
           {orders.map((order) => (
             <TR key={order._id}>
               <TD>
-                <p className="font-mono text-xs font-semibold text-white">{orderRef(order._id)}</p>
-                <p className="mt-0.5 text-xs whitespace-nowrap text-muted">{formatDate(order.createdAt)}</p>
+                <p className="font-mono text-xs font-semibold text-white">
+                  {orderRef(order._id)}
+                </p>
+                <p className="mt-0.5 text-xs whitespace-nowrap text-muted">
+                  {formatDate(order.createdAt)}
+                </p>
               </TD>
               <TD>
-                <p className="font-medium text-white">{order.shippingAddress.fullName}</p>
+                <p className="font-medium text-white">
+                  {order.shippingAddress.fullName}
+                </p>
                 <p className="mt-0.5 text-xs text-muted">
-                  {order.shippingAddress.phoneNumber} · {order.shippingAddress.city}
+                  {order.shippingAddress.phoneNumber} ·{" "}
+                  {order.shippingAddress.city}
                 </p>
               </TD>
               <TD>
                 <div className="flex items-center gap-3">
-                  <Thumbnail src={order.bike?.imageUrl} alt="" fallback={Bike} size="sm" />
+                  <Thumbnail
+                    src={order.bike?.imageUrl}
+                    alt=""
+                    fallback={Bike}
+                    size="sm"
+                  />
                   <div className="min-w-0">
                     <p className="text-white">{order.bikeName}</p>
                     <p className="mt-0.5 text-xs text-muted">
@@ -144,7 +175,11 @@ async function OrdersTable({
           ))}
         </tbody>
       </Table>
-      <Pagination pagination={pagination} noun="orders" hrefForPage={hrefForPage} />
+      <Pagination
+        pagination={pagination}
+        noun="orders"
+        hrefForPage={hrefForPage}
+      />
     </>
   );
 }

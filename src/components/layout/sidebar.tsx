@@ -12,7 +12,6 @@ import type { PendingCounts } from "@/types/admin";
 import { cn } from "@/lib/utils";
 
 interface SidebarProps {
-  /** Separate layout ids keep the desktop and mobile active pills independent. */
   variant: "desktop" | "mobile";
   countsPromise: Promise<PendingCounts>;
   siteUrl?: string;
@@ -37,7 +36,7 @@ export function Sidebar({ variant, countsPromise, siteUrl, onNavigate }: Sidebar
 
       <nav
         aria-label="Main"
-        className="flex-1 overflow-y-auto pr-3 pb-4 [scrollbar-color:var(--color-line-strong)_transparent] [scrollbar-width:thin]"
+        className="flex-1 overflow-y-auto pr-3 pb-4 [scrollbar-color:var(--color-line-strong)_transparent] scrollbar-thin"
       >
         {NAV_SECTIONS.map((section) => (
           <div key={section.title} className="mt-5 first:mt-1">
@@ -111,7 +110,7 @@ function NavLink({
       aria-current={active ? "page" : undefined}
       className={cn(
         "relative flex h-11 items-center gap-3.5 rounded-r-xl pr-3 pl-6 text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-brand/60 focus-visible:ring-inset",
-        active ? "font-medium text-white" : "text-ink-soft hover:bg-white/[0.06] hover:text-white",
+        active ? "font-medium text-white" : "text-ink-soft hover:bg-white/6 hover:text-white",
       )}
     >
       {active && (

@@ -138,7 +138,6 @@ async function ModelsTable({
 }) {
   const { bikes, pagination } = await getBikes(query);
 
-  // Deleting the last item on the last page leaves an empty page behind.
   if (bikes.length === 0 && pagination.totalPages > 0 && query.page > pagination.totalPages) {
     redirect(hrefForPage(pagination.totalPages));
   }
@@ -158,7 +157,7 @@ async function ModelsTable({
 
   return (
     <>
-      <Table className="min-w-[900px]">
+      <Table className="min-w-225">
         <TableHead>
           <TH>Model</TH>
           <TH>Brand</TH>

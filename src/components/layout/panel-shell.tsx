@@ -17,18 +17,23 @@ interface PanelShellProps {
   children: React.ReactNode;
 }
 
-export function PanelShell({ admin, countsPromise, siteUrl, footer, children }: PanelShellProps) {
+export function PanelShell({
+  admin,
+  countsPromise,
+  siteUrl,
+  footer,
+  children,
+}: PanelShellProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const closeMenu = () => setMenuOpen(false);
 
-  // The drawer only exists below the `lg` breakpoint; close it when the
-  // viewport grows past it, and while it's open lock scroll + handle Escape.
   useEffect(() => {
     if (!menuOpen) return;
 
     const desktop = window.matchMedia("(min-width: 64rem)");
     const onResize = () => desktop.matches && setMenuOpen(false);
-    const onKeyDown = (event: KeyboardEvent) => event.key === "Escape" && setMenuOpen(false);
+    const onKeyDown = (event: KeyboardEvent) =>
+      event.key === "Escape" && setMenuOpen(false);
 
     const unlockScroll = lockScroll();
     desktop.addEventListener("change", onResize);
@@ -45,13 +50,17 @@ export function PanelShell({ admin, countsPromise, siteUrl, footer, children }: 
     <div className="min-h-dvh">
       <a
         href="#main"
-        className="sr-only z-[60] rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-brand-ink focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
+        className="sr-only z-60 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-brand-ink focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
       >
         Skip to content
       </a>
 
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-60 border-r border-white/5 lg:block">
-        <Sidebar variant="desktop" countsPromise={countsPromise} siteUrl={siteUrl} />
+        <Sidebar
+          variant="desktop"
+          countsPromise={countsPromise}
+          siteUrl={siteUrl}
+        />
       </aside>
 
       <AnimatePresence>
@@ -102,7 +111,10 @@ export function PanelShell({ admin, countsPromise, siteUrl, footer, children }: 
           menuOpen={menuOpen}
           onOpenMenu={() => setMenuOpen(true)}
         />
-        <main id="main" className="mx-auto w-full max-w-[1400px] flex-1 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+        <main
+          id="main"
+          className="mx-auto w-full max-w-350 flex-1 px-4 py-6 sm:px-6 lg:px-8 lg:py-8"
+        >
           {children}
         </main>
         {footer}

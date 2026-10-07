@@ -1,5 +1,3 @@
-// Types for the Evinn Server API. Mirrors section 9 of docs/API.md.
-
 export type ObjectId = string;
 export type ISODate = string;
 
@@ -89,7 +87,6 @@ export interface Accessory {
 
 export type SparePart = Accessory;
 
-/** Accessories and spare parts share one shape; this is the common name used by the UI. */
 export type StoreItem = Accessory;
 
 export type ContactReason =
@@ -161,8 +158,6 @@ export interface Order {
   createdAt: ISODate;
   updatedAt: ISODate;
 }
-
-// Responses
 
 export interface LoginResponse {
   accessToken: string;
@@ -239,8 +234,6 @@ export interface OrderResponse {
   order: Order;
 }
 
-// Query params
-
 export interface PageQuery {
   page?: number;
   limit?: number;
@@ -273,8 +266,6 @@ export interface OrderListQuery extends PageQuery {
   status?: OrderStatus;
   bike?: ObjectId;
 }
-
-// Request bodies
 
 export type BrandInput = Partial<
   Pick<

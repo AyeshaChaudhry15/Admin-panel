@@ -7,7 +7,7 @@ export function Skeleton({ className }: { className?: string }) {
   return (
     <m.div
       aria-hidden
-      className={cn("rounded-lg bg-white/[0.06]", className)}
+      className={cn("rounded-lg bg-white/6", className)}
       animate={{ opacity: [0.5, 1, 0.5] }}
       transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
     />
@@ -18,7 +18,10 @@ export function StatsSkeleton({ count = 4 }: { count?: number }) {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
       {Array.from({ length: count }, (_, index) => (
-        <div key={index} className="rounded-2xl border border-line bg-surface p-5">
+        <div
+          key={index}
+          className="rounded-2xl border border-line bg-surface p-5"
+        >
           <Skeleton className="size-11 rounded-xl" />
           <Skeleton className="mt-4 h-3.5 w-24" />
           <Skeleton className="mt-2.5 h-7 w-16" />
@@ -28,7 +31,13 @@ export function StatsSkeleton({ count = 4 }: { count?: number }) {
   );
 }
 
-export function TableSkeleton({ rows = 6, columns = 5 }: { rows?: number; columns?: number }) {
+export function TableSkeleton({
+  rows = 6,
+  columns = 5,
+}: {
+  rows?: number;
+  columns?: number;
+}) {
   return (
     <div role="status" aria-label="Loading" className="divide-y divide-line/70">
       {Array.from({ length: rows }, (_, row) => (
@@ -37,7 +46,10 @@ export function TableSkeleton({ rows = 6, columns = 5 }: { rows?: number; column
           {Array.from({ length: columns - 1 }, (_, column) => (
             <Skeleton
               key={column}
-              className={cn("h-4 flex-1", column === 0 ? "max-w-48" : "max-w-28")}
+              className={cn(
+                "h-4 flex-1",
+                column === 0 ? "max-w-48" : "max-w-28",
+              )}
             />
           ))}
         </div>
@@ -58,7 +70,13 @@ export function PanelSkeleton({ rows = 5 }: { rows?: number }) {
   );
 }
 
-export function PageSkeleton({ stats = 4, columns = 5 }: { stats?: number; columns?: number }) {
+export function PageSkeleton({
+  stats = 4,
+  columns = 5,
+}: {
+  stats?: number;
+  columns?: number;
+}) {
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">

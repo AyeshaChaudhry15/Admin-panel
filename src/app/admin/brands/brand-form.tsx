@@ -4,16 +4,30 @@ import { Check } from "lucide-react";
 import { useFormSubmit } from "@/components/crud";
 import { Button } from "@/components/ui/button";
 import { DialogBody, DialogFooter } from "@/components/ui/dialog";
-import { Field, FormAlert, FormSection, Input, Textarea } from "@/components/ui/form";
+import {
+  Field,
+  FormAlert,
+  FormSection,
+  Input,
+  Textarea,
+} from "@/components/ui/form";
 import { ImageUpload } from "@/components/ui/image-upload";
 import { saveBrand } from "@/lib/actions/catalog";
 import type { Brand } from "@/types/api";
 
 const LINK_FIELDS = [
   { name: "websiteUrl", label: "Website", placeholder: "https://example.com" },
-  { name: "instagramUrl", label: "Instagram", placeholder: "https://instagram.com/…" },
+  {
+    name: "instagramUrl",
+    label: "Instagram",
+    placeholder: "https://instagram.com/…",
+  },
   { name: "twitterUrl", label: "X / Twitter", placeholder: "https://x.com/…" },
-  { name: "facebookUrl", label: "Facebook", placeholder: "https://facebook.com/…" },
+  {
+    name: "facebookUrl",
+    label: "Facebook",
+    placeholder: "https://facebook.com/…",
+  },
 ] as const;
 
 interface BrandFormProps {
@@ -43,13 +57,26 @@ export function BrandForm({ brand, onSuccess, onCancel }: BrandFormProps) {
               data-autofocus
             />
           </Field>
-          <ImageUpload name="logo" label="Logo" currentUrl={brand?.logoUrl} required />
+          <ImageUpload
+            name="logo"
+            label="Logo"
+            currentUrl={brand?.logoUrl}
+            required
+          />
         </FormSection>
 
-        <FormSection title="Profile" description="Shown on the brand's page on the website.">
+        <FormSection
+          title="Profile"
+          description="Shown on the brand's page on the website."
+        >
           <div className="grid gap-4 sm:grid-cols-3">
             <Field label="Origin" htmlFor="brand-origin" optional>
-              <Input id="brand-origin" name="origin" defaultValue={brand?.origin} placeholder="e.g. Pakistani" />
+              <Input
+                id="brand-origin"
+                name="origin"
+                defaultValue={brand?.origin}
+                placeholder="e.g. Pakistani"
+              />
             </Field>
             <Field label="Established" htmlFor="brand-established" optional>
               <Input
@@ -68,7 +95,12 @@ export function BrandForm({ brand, onSuccess, onCancel }: BrandFormProps) {
               />
             </Field>
           </div>
-          <Field label="About" htmlFor="brand-about" optional hint="Up to 2,000 characters.">
+          <Field
+            label="About"
+            htmlFor="brand-about"
+            optional
+            hint="Up to 2,000 characters."
+          >
             <Textarea
               id="brand-about"
               name="about"
@@ -80,10 +112,18 @@ export function BrandForm({ brand, onSuccess, onCancel }: BrandFormProps) {
           </Field>
         </FormSection>
 
-        <FormSection title="Links" description="Leave blank to hide a link on the website.">
+        <FormSection
+          title="Links"
+          description="Leave blank to hide a link on the website."
+        >
           <div className="grid gap-4 sm:grid-cols-2">
             {LINK_FIELDS.map((field) => (
-              <Field key={field.name} label={field.label} htmlFor={`brand-${field.name}`} optional>
+              <Field
+                key={field.name}
+                label={field.label}
+                htmlFor={`brand-${field.name}`}
+                optional
+              >
                 <Input
                   id={`brand-${field.name}`}
                   name={field.name}

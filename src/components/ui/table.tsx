@@ -1,10 +1,17 @@
 import { cn } from "@/lib/utils";
 
-/** Horizontally scrollable table; `className` sets the minimum width. */
-export function Table({ className, children }: { className?: string; children: React.ReactNode }) {
+export function Table({
+  className,
+  children,
+}: {
+  className?: string;
+  children: React.ReactNode;
+}) {
   return (
     <div className="overflow-x-auto">
-      <table className={cn("w-full border-collapse text-left", className)}>{children}</table>
+      <table className={cn("w-full border-collapse text-left", className)}>
+        {children}
+      </table>
     </div>
   );
 }

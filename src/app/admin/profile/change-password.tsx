@@ -50,7 +50,10 @@ function ChangePasswordForm({
   onSuccess: (message: string) => void;
   onCancel: () => void;
 }) {
-  const { error, pending, handleSubmit } = useFormSubmit(changePassword, onSuccess);
+  const { error, pending, handleSubmit } = useFormSubmit(
+    changePassword,
+    onSuccess,
+  );
 
   return (
     <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col">

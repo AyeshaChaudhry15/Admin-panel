@@ -19,10 +19,6 @@ export function parseOneOf<T extends string>(
   return allowed.find((item) => item === param);
 }
 
-/**
- * Returns `pathname` with the current search params merged with `patch`,
- * sorted by key. `null`/`undefined`/empty values remove the param.
- */
 export function hrefWith(
   pathname: string,
   current: SearchParams,
@@ -36,11 +32,11 @@ export function hrefWith(
   }
 
   for (const [key, value] of Object.entries(patch)) {
-    if (value === null || value === undefined || value === "") params.delete(key);
+    if (value === null || value === undefined || value === "")
+      params.delete(key);
     else params.set(key, String(value));
   }
 
-  // A stable order lets callers compare hrefs to find the active filter.
   params.sort();
 
   const query = params.toString();

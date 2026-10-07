@@ -21,7 +21,13 @@ import { Table, TableHead, TD, TH, TR } from "@/components/ui/table";
 import { Thumbnail } from "@/components/ui/thumbnail";
 import { toneTile } from "@/components/ui/tone";
 import { ORDER_STATUS_TONE, type Tone } from "@/lib/constants";
-import { capitalize, formatDate, formatNumber, formatPKR, orderRef } from "@/lib/format";
+import {
+  capitalize,
+  formatDate,
+  formatNumber,
+  formatPKR,
+  orderRef,
+} from "@/lib/format";
 import {
   getBikes,
   getBrands,
@@ -32,16 +38,23 @@ import {
 import { cn } from "@/lib/utils";
 
 export async function CatalogStats() {
-  const [models, bikesOnly, brands, accessories, accessoriesInStock, parts, partsInStock] =
-    await Promise.all([
-      getBikes({ limit: 1 }),
-      getBikes({ type: "bike", limit: 1 }),
-      getBrands(),
-      getStoreItems("accessories", { limit: 1 }),
-      getStoreItems("accessories", { inStock: true, limit: 1 }),
-      getStoreItems("spare-parts", { limit: 1 }),
-      getStoreItems("spare-parts", { inStock: true, limit: 1 }),
-    ]);
+  const [
+    models,
+    bikesOnly,
+    brands,
+    accessories,
+    accessoriesInStock,
+    parts,
+    partsInStock,
+  ] = await Promise.all([
+    getBikes({ limit: 1 }),
+    getBikes({ type: "bike", limit: 1 }),
+    getBrands(),
+    getStoreItems("accessories", { limit: 1 }),
+    getStoreItems("accessories", { inStock: true, limit: 1 }),
+    getStoreItems("spare-parts", { limit: 1 }),
+    getStoreItems("spare-parts", { inStock: true, limit: 1 }),
+  ]);
 
   const totalModels = models.pagination.total;
   const bikes = bikesOnly.pagination.total;
@@ -99,7 +112,7 @@ export async function RecentModels() {
           description="Add your first bike or scooter to start building the catalog."
         />
       ) : (
-        <Table className="min-w-[520px]">
+        <Table className="min-w-130">
           <TableHead>
             <TH>Model</TH>
             <TH>Brand</TH>
@@ -112,13 +125,20 @@ export async function RecentModels() {
               <TR key={bike._id}>
                 <TD>
                   <div className="flex items-center gap-3">
-                    <Thumbnail src={bike.imageUrl} alt={bike.name} fallback={Bike} size="sm" />
+                    <Thumbnail
+                      src={bike.imageUrl}
+                      alt={bike.name}
+                      fallback={Bike}
+                      size="sm"
+                    />
                     <span className="font-medium text-white">{bike.name}</span>
                   </div>
                 </TD>
                 <TD>{bike.brand.displayName}</TD>
                 <TD>
-                  <Badge tone={bike.type === "bike" ? "brand" : "info"}>{capitalize(bike.type)}</Badge>
+                  <Badge tone={bike.type === "bike" ? "brand" : "info"}>
+                    {capitalize(bike.type)}
+                  </Badge>
                 </TD>
                 <TD className="font-semibold whitespace-nowrap text-white tabular-nums">
                   {formatPKR(bike.price)}
@@ -135,15 +155,55 @@ export async function RecentModels() {
   );
 }
 
-const QUICK_ACTIONS: { href: string; label: string; icon: LucideIcon; tone: Tone }[] = [
-  { href: "/admin/models?new=1", label: "Add Model", icon: Plus, tone: "brand" },
+const QUICK_ACTIONS: {
+  href: string;
+  label: string;
+  icon: LucideIcon;
+  tone: Tone;
+}[] = [
+  {
+    href: "/admin/models?new=1",
+    label: "Add Model",
+    icon: Plus,
+    tone: "brand",
+  },
   { href: "/admin/brands?new=1", label: "Add Brand", icon: Tag, tone: "info" },
-  { href: "/admin/accessories?new=1", label: "Add Accessory", icon: Package, tone: "info" },
-  { href: "/admin/spare-parts?new=1", label: "Add Spare Part", icon: Wrench, tone: "info" },
-  { href: "/admin/orders?status=pending", label: "New Orders", icon: ShoppingBag, tone: "info" },
-  { href: "/admin/test-rides?status=pending", label: "Test Ride Requests", icon: CalendarCheck, tone: "info" },
-  { href: "/admin/messages?status=pending", label: "Unread Messages", icon: MessageSquare, tone: "info" },
-  { href: "/admin/models?type=scooter", label: "Browse Scooters", icon: Bike, tone: "info" },
+  {
+    href: "/admin/accessories?new=1",
+    label: "Add Accessory",
+    icon: Package,
+    tone: "info",
+  },
+  {
+    href: "/admin/spare-parts?new=1",
+    label: "Add Spare Part",
+    icon: Wrench,
+    tone: "info",
+  },
+  {
+    href: "/admin/orders?status=pending",
+    label: "New Orders",
+    icon: ShoppingBag,
+    tone: "info",
+  },
+  {
+    href: "/admin/test-rides?status=pending",
+    label: "Test Ride Requests",
+    icon: CalendarCheck,
+    tone: "info",
+  },
+  {
+    href: "/admin/messages?status=pending",
+    label: "Unread Messages",
+    icon: MessageSquare,
+    tone: "info",
+  },
+  {
+    href: "/admin/models?type=scooter",
+    label: "Browse Scooters",
+    icon: Bike,
+    tone: "info",
+  },
 ];
 
 export function QuickActions() {
@@ -187,7 +247,7 @@ export async function LatestOrders() {
           description="Orders placed on the website will show up here."
         />
       ) : (
-        <Table className="min-w-[520px]">
+        <Table className="min-w-130">
           <TableHead>
             <TH>Order</TH>
             <TH>Customer</TH>
@@ -199,18 +259,26 @@ export async function LatestOrders() {
             {orders.map((order) => (
               <TR key={order._id}>
                 <TD>
-                  <p className="font-mono text-xs font-semibold text-white">{orderRef(order._id)}</p>
+                  <p className="font-mono text-xs font-semibold text-white">
+                    {orderRef(order._id)}
+                  </p>
                   <p className="mt-0.5 text-xs whitespace-nowrap text-muted">
                     {formatDate(order.createdAt)}
                   </p>
                 </TD>
                 <TD>
-                  <p className="font-medium text-white">{order.shippingAddress.fullName}</p>
-                  <p className="mt-0.5 text-xs text-muted">{order.shippingAddress.city}</p>
+                  <p className="font-medium text-white">
+                    {order.shippingAddress.fullName}
+                  </p>
+                  <p className="mt-0.5 text-xs text-muted">
+                    {order.shippingAddress.city}
+                  </p>
                 </TD>
                 <TD>
                   {order.bikeName}
-                  {order.quantity > 1 && <span className="text-muted"> × {order.quantity}</span>}
+                  {order.quantity > 1 && (
+                    <span className="text-muted"> × {order.quantity}</span>
+                  )}
                 </TD>
                 <TD className="font-semibold whitespace-nowrap text-white tabular-nums">
                   {formatPKR(order.totalAmount)}
@@ -235,16 +303,49 @@ export async function NeedsAttention() {
     getOrders({ status: "processing", limit: 1 }),
   ]);
 
-  const cards: { href: string; label: string; value: number | null; icon: LucideIcon; tone: Tone }[] = [
-    { href: "/admin/orders?status=pending", label: "Orders to confirm", value: counts.orders, icon: PackageCheck, tone: "warning" },
-    { href: "/admin/orders?status=processing", label: "Orders in progress", value: processing.pagination.total, icon: Truck, tone: "brand" },
-    { href: "/admin/test-rides?status=pending", label: "Test rides to review", value: counts.testRides, icon: CalendarCheck, tone: "violet" },
-    { href: "/admin/messages?status=pending", label: "Unanswered messages", value: counts.messages, icon: MessageSquare, tone: "info" },
+  const cards: {
+    href: string;
+    label: string;
+    value: number | null;
+    icon: LucideIcon;
+    tone: Tone;
+  }[] = [
+    {
+      href: "/admin/orders?status=pending",
+      label: "Orders to confirm",
+      value: counts.orders,
+      icon: PackageCheck,
+      tone: "warning",
+    },
+    {
+      href: "/admin/orders?status=processing",
+      label: "Orders in progress",
+      value: processing.pagination.total,
+      icon: Truck,
+      tone: "brand",
+    },
+    {
+      href: "/admin/test-rides?status=pending",
+      label: "Test rides to review",
+      value: counts.testRides,
+      icon: CalendarCheck,
+      tone: "violet",
+    },
+    {
+      href: "/admin/messages?status=pending",
+      label: "Unanswered messages",
+      value: counts.messages,
+      icon: MessageSquare,
+      tone: "info",
+    },
   ];
 
   return (
     <Panel>
-      <PanelHeader title="Needs Attention" description="Customer requests waiting on you" />
+      <PanelHeader
+        title="Needs Attention"
+        description="Customer requests waiting on you"
+      />
       <div className="grid grid-cols-2 gap-2.5 p-4 sm:grid-cols-4 sm:p-5 xl:grid-cols-2">
         {cards.map(({ href, label, value, icon: Icon, tone }) => (
           <Link
@@ -263,7 +364,9 @@ export async function NeedsAttention() {
               <p className="text-2xl leading-none font-bold text-white tabular-nums">
                 {value === null ? "—" : formatNumber(value)}
               </p>
-              <p className="mt-1.5 text-xs leading-snug text-ink-soft">{label}</p>
+              <p className="mt-1.5 text-xs leading-snug text-ink-soft">
+                {label}
+              </p>
             </div>
           </Link>
         ))}

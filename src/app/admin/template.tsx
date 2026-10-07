@@ -2,8 +2,11 @@
 
 import { m } from "framer-motion";
 
-/** Fades each admin page in on navigation. */
-export default function AdminTemplate({ children }: { children: React.ReactNode }) {
+export default function AdminTemplate({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <m.div
       initial={{ opacity: 0, y: 8 }}

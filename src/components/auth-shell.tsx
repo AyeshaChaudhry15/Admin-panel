@@ -8,7 +8,6 @@ interface AuthShellProps {
   footer?: React.ReactNode;
 }
 
-/** Centered card layout shared by the login and password-reset screens. */
 export function AuthShell({ title, description, children, footer }: AuthShellProps) {
   return (
     <main className="relative isolate flex min-h-dvh items-center justify-center overflow-hidden px-4 py-12">

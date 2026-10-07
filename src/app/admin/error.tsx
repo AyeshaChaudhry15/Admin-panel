@@ -21,11 +21,18 @@ export default function AdminError({
         <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-danger/10 text-danger">
           <ServerCrash className="size-6" />
         </div>
-        <h1 className="mt-5 text-lg font-bold text-white">Couldn&apos;t load this page</h1>
+        <h1 className="mt-5 text-lg font-bold text-white">
+          Couldn&apos;t load this page
+        </h1>
         <p className="mt-2 text-sm leading-relaxed text-muted">
-          The EVINN server didn&apos;t respond as expected. Check your connection and try again.
+          The EVINN server didn&apos;t respond as expected. Check your
+          connection and try again.
         </p>
-        {error.digest && <p className="mt-3 font-mono text-xs text-subtle">Ref: {error.digest}</p>}
+        {error.digest && (
+          <p className="mt-3 font-mono text-xs text-subtle">
+            Ref: {error.digest}
+          </p>
+        )}
         <Button onClick={retry} className="mt-6">
           <RotateCw />
           Try again

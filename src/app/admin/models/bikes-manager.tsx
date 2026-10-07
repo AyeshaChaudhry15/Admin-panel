@@ -54,8 +54,9 @@ export function BikesManager({
         confirmLabel="Delete model"
         description={
           <>
-            <b className="text-white">{deleting?.name}</b> and its image will be permanently deleted
-            and removed from the website. Existing orders keep their details.
+            <b className="text-white">{deleting?.name}</b> and its image will be
+            permanently deleted and removed from the website. Existing orders
+            keep their details.
           </>
         }
         onConfirm={() => deleteBike(deleting?._id ?? "")}

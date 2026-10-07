@@ -1,6 +1,13 @@
 "use client";
 
-import { ChevronDown, Eye, Mail, MessageSquare, Reply, Trash2 } from "lucide-react";
+import {
+  ChevronDown,
+  Eye,
+  Mail,
+  MessageSquare,
+  Reply,
+  Trash2,
+} from "lucide-react";
 import { useOptimistic, useState, useTransition } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonStyles } from "@/components/ui/button";
@@ -8,7 +15,10 @@ import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { Dialog, DialogBody, DialogFooter } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/toast";
 import { toneBadge, toneText } from "@/components/ui/tone";
-import { deleteContactSubmission, updateContactStatus } from "@/lib/actions/requests";
+import {
+  deleteContactSubmission,
+  updateContactStatus,
+} from "@/lib/actions/requests";
 import { CONTACT_STATUS_TONE, CONTACT_STATUSES } from "@/lib/constants";
 import { capitalize, formatDateTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -19,8 +29,11 @@ function replyHref(message: ContactSubmission) {
   return `mailto:${message.email}?subject=${subject}`;
 }
 
-/** Status dropdown that updates immediately and rolls back if the save fails. */
-export function MessageStatusSelect({ message }: { message: ContactSubmission }) {
+export function MessageStatusSelect({
+  message,
+}: {
+  message: ContactSubmission;
+}) {
   const toast = useToast();
   const [, startTransition] = useTransition();
   const [status, setOptimisticStatus] = useOptimistic(message.status);
@@ -111,19 +124,28 @@ export function MessageActions({ message }: { message: ContactSubmission }) {
           </div>
 
           <div className="rounded-xl border border-line bg-field p-4 text-sm leading-relaxed whitespace-pre-wrap text-ink-soft">
-            {message.message || <span className="text-subtle italic">No message was included.</span>}
+            {message.message || (
+              <span className="text-subtle italic">
+                No message was included.
+              </span>
+            )}
           </div>
 
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-xs text-muted">
-              Replies go out from your email app. Mark the message as answered afterwards.
+              Replies go out from your email app. Mark the message as answered
+              afterwards.
             </p>
             <MessageStatusSelect message={message} />
           </div>
         </DialogBody>
 
         <DialogFooter>
-          <Button variant="danger-soft" onClick={() => setDialog("delete")} className="sm:mr-auto">
+          <Button
+            variant="danger-soft"
+            onClick={() => setDialog("delete")}
+            className="sm:mr-auto"
+          >
             <Trash2 />
             Delete
           </Button>
@@ -144,8 +166,8 @@ export function MessageActions({ message }: { message: ContactSubmission }) {
         confirmLabel="Delete message"
         description={
           <>
-            The message from <b className="text-white">{message.fullName}</b> will be permanently
-            deleted.
+            The message from <b className="text-white">{message.fullName}</b>{" "}
+            will be permanently deleted.
           </>
         }
         onConfirm={() => deleteContactSubmission(message._id)}

@@ -39,7 +39,6 @@ interface BikeFormProps {
 export function BikeForm({ bike, brands, onSuccess, onCancel }: BikeFormProps) {
   const [name, setName] = useState(bike?.name ?? "");
   const [slug, setSlug] = useState(bike?.slug ?? "");
-  // While creating, the slug follows the name until it's edited by hand.
   const [slugEdited, setSlugEdited] = useState(Boolean(bike));
 
   const { error, pending, handleSubmit } = useFormSubmit(
@@ -114,7 +113,7 @@ export function BikeForm({ bike, brands, onSuccess, onCancel }: BikeFormProps) {
                   <label
                     key={value}
                     className={cn(
-                      "flex h-11 cursor-pointer items-center justify-center gap-2 rounded-xl border border-line-strong bg-field text-sm font-semibold text-muted transition-colors hover:border-subtle has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-brand/40",
+                      "flex h-11 cursor-pointer items-center justify-center gap-2 rounded-xl border border-line-strong bg-field text-sm font-semibold text-muted transition-colors hover:border-subtle has-focus-visible:ring-2 has-focus-visible:ring-brand/40",
                       className,
                     )}
                   >

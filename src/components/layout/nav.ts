@@ -16,16 +16,21 @@ export interface NavItem {
   href: string;
   label: string;
   icon: LucideIcon;
-  /** Only highlight on an exact path match. */
   exact?: boolean;
-  /** Pending-count badge to show next to the item. */
   badge?: keyof PendingCounts;
 }
 
 export const NAV_SECTIONS: { title: string; items: NavItem[] }[] = [
   {
     title: "Overview",
-    items: [{ href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true }],
+    items: [
+      {
+        href: "/admin",
+        label: "Dashboard",
+        icon: LayoutDashboard,
+        exact: true,
+      },
+    ],
   },
   {
     title: "Catalog",
@@ -39,9 +44,24 @@ export const NAV_SECTIONS: { title: string; items: NavItem[] }[] = [
   {
     title: "Customers",
     items: [
-      { href: "/admin/orders", label: "Orders", icon: ShoppingBag, badge: "orders" },
-      { href: "/admin/test-rides", label: "Test Rides", icon: CalendarCheck, badge: "testRides" },
-      { href: "/admin/messages", label: "Messages", icon: MessageSquare, badge: "messages" },
+      {
+        href: "/admin/orders",
+        label: "Orders",
+        icon: ShoppingBag,
+        badge: "orders",
+      },
+      {
+        href: "/admin/test-rides",
+        label: "Test Rides",
+        icon: CalendarCheck,
+        badge: "testRides",
+      },
+      {
+        href: "/admin/messages",
+        label: "Messages",
+        icon: MessageSquare,
+        badge: "messages",
+      },
     ],
   },
   {

@@ -10,9 +10,7 @@ import { cn, validateImage } from "@/lib/utils";
 interface ImageUploadProps {
   name: string;
   label: string;
-  /** Image already saved on the record, shown until a new file is picked. */
   currentUrl?: string;
-  /** Required only when there's no current image. */
   required?: boolean;
   hint?: string;
 }
@@ -23,18 +21,23 @@ function formatSize(bytes: number) {
     : `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-/**
- * File input with drag & drop, client-side type/size checks and a preview.
- * The file itself is submitted with the surrounding form.
- */
-export function ImageUpload({ name, label, currentUrl, required = false, hint }: ImageUploadProps) {
+export function ImageUpload({
+  name,
+  label,
+  currentUrl,
+  required = false,
+  hint,
+}: ImageUploadProps) {
   const id = useId();
   const inputRef = useRef<HTMLInputElement>(null);
-  const [preview, setPreview] = useState<{ url: string; name: string; size: number } | null>(null);
+  const [preview, setPreview] = useState<{
+    url: string;
+    name: string;
+    size: number;
+  } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);
 
-  // Release the object URL when it's replaced or the component unmounts.
   useEffect(() => {
     return () => {
       if (preview) URL.revokeObjectURL(preview.url);
@@ -47,7 +50,6 @@ export function ImageUpload({ name, label, currentUrl, required = false, hint }:
 
     const problem = validateImage(file);
     if (problem) {
-      // Clearing the input drops any earlier valid pick, so drop its preview too.
       setError(problem);
       setPreview(null);
       inputRef.current.value = "";
@@ -56,7 +58,11 @@ export function ImageUpload({ name, label, currentUrl, required = false, hint }:
 
     if (inputRef.current.files !== files) inputRef.current.files = files;
     setError(null);
-    setPreview({ url: URL.createObjectURL(file), name: file.name, size: file.size });
+    setPreview({
+      url: URL.createObjectURL(file),
+      name: file.name,
+      size: file.size,
+    });
   }
 
   const shownUrl = preview?.url ?? currentUrl;
@@ -80,7 +86,7 @@ export function ImageUpload({ name, label, currentUrl, required = false, hint }:
           select(event.dataTransfer.files);
         }}
         className={cn(
-          "flex min-h-40 cursor-pointer flex-col items-center justify-center gap-3 rounded-xl border border-dashed bg-field p-5 text-center transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-brand/40",
+          "flex min-h-40 cursor-pointer flex-col items-center justify-center gap-3 rounded-xl border border-dashed bg-field p-5 text-center transition-colors has-focus-visible:ring-2 has-focus-visible:ring-brand/40",
           dragging
             ? "border-brand bg-brand/5"
             : error
@@ -109,7 +115,9 @@ export function ImageUpload({ name, label, currentUrl, required = false, hint }:
               </div>
               <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand">
                 <RefreshCw className="size-3.5" />
-                {preview ? `${preview.name} · ${formatSize(preview.size)}` : "Replace image"}
+                {preview
+                  ? `${preview.name} · ${formatSize(preview.size)}`
+                  : "Replace image"}
               </span>
             </m.div>
           ) : (

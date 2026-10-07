@@ -24,7 +24,6 @@ import type {
 
 type Options = Pick<RequestOptions, "onUnauthorized">;
 
-/** All brands, alphabetical. Not paginated by the API. */
 export const getBrands = cache(async () => {
   const { brands } = await api<BrandListResponse>("/brands");
   return brands;
@@ -42,10 +41,12 @@ export async function getStoreItems(
   query: StoreItemListQuery = {},
   options?: Options,
 ): Promise<{ items: StoreItem[]; pagination: Pagination }> {
-  const data = await api<Partial<AccessoryListResponse & SparePartListResponse>>(
-    STORE_KINDS[kind].apiPath,
-    { ...options, query: { limit: PAGE_SIZE, ...query } },
-  );
+  const data = await api<
+    Partial<AccessoryListResponse & SparePartListResponse>
+  >(STORE_KINDS[kind].apiPath, {
+    ...options,
+    query: { limit: PAGE_SIZE, ...query },
+  });
 
   return {
     items: (kind === "accessories" ? data.accessories : data.spareParts) ?? [],
@@ -60,21 +61,26 @@ export function getOrders(query: OrderListQuery = {}, options?: Options) {
   });
 }
 
-export function getTestRideRequests(query: TestRideRequestListQuery = {}, options?: Options) {
+export function getTestRideRequests(
+  query: TestRideRequestListQuery = {},
+  options?: Options,
+) {
   return api<TestRideRequestListResponse>("/test-ride-requests", {
     ...options,
     query: { limit: PAGE_SIZE, ...query },
   });
 }
 
-export function getContactSubmissions(query: ContactSubmissionListQuery = {}, options?: Options) {
+export function getContactSubmissions(
+  query: ContactSubmissionListQuery = {},
+  options?: Options,
+) {
   return api<ContactSubmissionListResponse>("/contact-submissions", {
     ...options,
     query: { limit: PAGE_SIZE, ...query },
   });
 }
 
-/** Resolves to the list's total, or `null` if the API call failed. */
 async function totalOf(request: Promise<{ pagination: Pagination }>) {
   try {
     return (await request).pagination.total;
@@ -84,10 +90,6 @@ async function totalOf(request: Promise<{ pagination: Pagination }>) {
   }
 }
 
-/**
- * Items waiting for the admin. Failures resolve to `null` instead of
- * throwing, so a single broken endpoint never takes down the whole panel.
- */
 export const getPendingCounts = cache(async (): Promise<PendingCounts> => {
   const options: Options = { onUnauthorized: "throw" };
   const query = { status: "pending", limit: 1 } as const;

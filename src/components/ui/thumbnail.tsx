@@ -15,8 +15,12 @@ interface ThumbnailProps {
   size?: keyof typeof sizes;
 }
 
-/** Small, optimized product/brand image with an icon fallback. */
-export function Thumbnail({ src, alt, fallback: Fallback, size = "md" }: ThumbnailProps) {
+export function Thumbnail({
+  src,
+  alt,
+  fallback: Fallback,
+  size = "md",
+}: ThumbnailProps) {
   const { box, px } = sizes[size];
 
   return (
@@ -27,7 +31,13 @@ export function Thumbnail({ src, alt, fallback: Fallback, size = "md" }: Thumbna
       )}
     >
       {src ? (
-        <Image src={src} alt={alt} fill sizes={`${px}px`} className="object-contain p-1" />
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          sizes={`${px}px`}
+          className="object-contain p-1"
+        />
       ) : (
         <Fallback className="size-5 text-subtle" aria-hidden />
       )}

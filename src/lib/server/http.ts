@@ -4,10 +4,9 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { LOGIN_PATH, SESSION_COOKIE } from "@/lib/constants";
 
-const API_URL = (process.env.API_URL ?? "https://evinn.evermontech.com/api").replace(
-  /\/+$/,
-  "",
-);
+const API_URL = (
+  process.env.API_URL ?? "https://evinn.evermontech.com/api"
+).replace(/\/+$/, "");
 
 export class ApiError extends Error {
   readonly status: number;
@@ -23,22 +22,15 @@ type QueryValue = string | number | boolean | null | undefined;
 
 export interface RequestOptions {
   method?: "GET" | "POST" | "PATCH" | "DELETE";
-  /** `FormData` is sent as multipart, anything else as JSON. */
   body?: FormData | object;
   query?: Record<string, QueryValue>;
-  /**
-   * What to do when the API rejects the session with a 401. Pages and admin
-   * actions redirect to the login page; auth flows handle it themselves.
-   */
   onUnauthorized?: "redirect" | "throw";
 }
 
-/**
- * Calls the Evinn API from the server, forwarding the admin's session cookie.
- * The browser never talks to the API directly, so CORS and cross-site cookie
- * rules don't apply.
- */
-export async function apiRequest<T>(path: string, options: RequestOptions = {}) {
+export async function apiRequest<T>(
+  path: string,
+  options: RequestOptions = {},
+) {
   const { method = "GET", body, query, onUnauthorized = "redirect" } = options;
 
   const url = new URL(`${API_URL}${path}`);
@@ -64,7 +56,10 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}) 
       cache: "no-store",
     });
   } catch {
-    throw new ApiError("Unable to reach the server. Please try again in a moment.", 503);
+    throw new ApiError(
+      "Unable to reach the server. Please try again in a moment.",
+      503,
+    );
   }
 
   const data = await response.json().catch(() => ({}));
@@ -85,7 +80,10 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}) 
   return { data: data as T, response };
 }
 
-export async function api<T>(path: string, options?: RequestOptions): Promise<T> {
+export async function api<T>(
+  path: string,
+  options?: RequestOptions,
+): Promise<T> {
   const { data } = await apiRequest<T>(path, options);
   return data;
 }

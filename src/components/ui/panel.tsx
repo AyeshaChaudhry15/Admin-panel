@@ -2,7 +2,13 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export function Panel({ className, children }: { className?: string; children: React.ReactNode }) {
+export function Panel({
+  className,
+  children,
+}: {
+  className?: string;
+  children: React.ReactNode;
+}) {
   return (
     <section
       className={cn(
@@ -18,18 +24,23 @@ export function Panel({ className, children }: { className?: string; children: R
 interface PanelHeaderProps {
   title: string;
   description?: React.ReactNode;
-  /** Filters, search, etc. Wraps under the title on small screens. */
   toolbar?: React.ReactNode;
-  /** Optional "View all" style link shown on the right. */
   link?: { href: string; label: string };
 }
 
-export function PanelHeader({ title, description, toolbar, link }: PanelHeaderProps) {
+export function PanelHeader({
+  title,
+  description,
+  toolbar,
+  link,
+}: PanelHeaderProps) {
   return (
     <div className="flex flex-col gap-4 border-b border-line px-5 py-4 sm:px-6 lg:flex-row lg:items-center lg:justify-between">
       <div className="min-w-0">
         <h2 className="text-base font-semibold text-white">{title}</h2>
-        {description && <p className="mt-0.5 text-sm text-muted">{description}</p>}
+        {description && (
+          <p className="mt-0.5 text-sm text-muted">{description}</p>
+        )}
       </div>
 
       {toolbar && (

@@ -17,13 +17,15 @@ export interface FilterTab {
 }
 
 function isPlainClick(event: React.MouseEvent) {
-  return event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey;
+  return (
+    event.button === 0 &&
+    !event.metaKey &&
+    !event.ctrlKey &&
+    !event.shiftKey &&
+    !event.altKey
+  );
 }
 
-/**
- * Segmented links that filter a list through the URL. The active pill moves
- * immediately (optimistically) while the server renders the new results.
- */
 export function FilterTabs({
   label,
   tabs,
@@ -42,7 +44,7 @@ export function FilterTabs({
   return (
     <nav
       aria-label={label}
-      className="flex max-w-full overflow-x-auto rounded-xl border border-line-strong bg-field p-1 [scrollbar-width:none]"
+      className="flex max-w-full overflow-x-auto rounded-xl border border-line-strong bg-field p-1 scrollbar-none"
     >
       {tabs.map((tab) => {
         const active = tab.href === optimisticHref;
@@ -76,7 +78,12 @@ export function FilterTabs({
             <span className="relative">
               {tab.label}
               {typeof tab.count === "number" && (
-                <span className={cn("ml-1.5 tabular-nums", active ? "opacity-70" : "text-subtle")}>
+                <span
+                  className={cn(
+                    "ml-1.5 tabular-nums",
+                    active ? "opacity-70" : "text-subtle",
+                  )}
+                >
                   {formatNumber(tab.count)}
                 </span>
               )}
@@ -88,7 +95,6 @@ export function FilterTabs({
   );
 }
 
-/** A `<select>` that navigates to the href mapped to each option. */
 export function SelectFilter({
   label,
   value,
@@ -123,12 +129,13 @@ export function SelectFilter({
           </option>
         ))}
       </Select>
-      {pending && <Spinner className="absolute top-1/2 right-10 size-3.5 -translate-y-1/2 text-brand" />}
+      {pending && (
+        <Spinner className="absolute top-1/2 right-10 size-3.5 -translate-y-1/2 text-brand" />
+      )}
     </div>
   );
 }
 
-/** Debounced search box that keeps its value in the `?q=` search param. */
 export function SearchField({
   basePath,
   defaultValue,
@@ -149,9 +156,12 @@ export function SearchField({
     timer.current = window.setTimeout(() => {
       const query = next.trim();
       startTransition(() => {
-        router.replace(query ? `${basePath}?q=${encodeURIComponent(query)}` : basePath, {
-          scroll: false,
-        });
+        router.replace(
+          query ? `${basePath}?q=${encodeURIComponent(query)}` : basePath,
+          {
+            scroll: false,
+          },
+        );
       });
     }, 250);
   }
@@ -170,7 +180,10 @@ export function SearchField({
         onChange={(event) => update(event.target.value)}
         placeholder={placeholder}
         aria-label={placeholder}
-        className={cn(fieldStyles, "h-11 pr-10 pl-11 [&::-webkit-search-cancel-button]:hidden")}
+        className={cn(
+          fieldStyles,
+          "h-11 pr-10 pl-11 [&::-webkit-search-cancel-button]:hidden",
+        )}
       />
 
       {value && (

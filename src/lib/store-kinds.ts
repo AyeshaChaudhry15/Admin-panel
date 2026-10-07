@@ -1,6 +1,3 @@
-// Accessories and spare parts are identical resources that only differ in
-// their API paths, response keys and wording.
-
 export const STORE_KINDS = {
   accessories: {
     apiPath: "/accessories",
@@ -16,7 +13,8 @@ export const STORE_KINDS = {
     title: "Spare Parts",
     singular: "spare part",
     plural: "spare parts",
-    description: "Manage replacement parts such as batteries, chargers and tyres.",
+    description:
+      "Manage replacement parts such as batteries, chargers and tyres.",
   },
 } as const;
 

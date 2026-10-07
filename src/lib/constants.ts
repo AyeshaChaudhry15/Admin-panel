@@ -7,10 +7,8 @@ import type {
   TestRideStatus,
 } from "@/types/api";
 
-/** Name of the httpOnly cookie that holds the backend JWT (same name the API uses). */
 export const SESSION_COOKIE = "accessToken";
 
-/** The API's token and cookie both live for one hour. */
 export const SESSION_MAX_AGE = 60 * 60;
 
 export const PAGE_SIZE = 10;
@@ -60,7 +58,6 @@ export const ORDER_STATUSES: readonly OrderStatus[] = [
   "rejected",
 ];
 
-/** Statuses an order can never leave once it reaches them. */
 export const FINAL_ORDER_STATUSES: readonly OrderStatus[] = [
   "completed",
   "cancelled",

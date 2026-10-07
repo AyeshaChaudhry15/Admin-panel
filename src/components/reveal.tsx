@@ -2,7 +2,6 @@
 
 import { m } from "framer-motion";
 
-/** Fades and lifts its content in on mount. */
 export function Reveal({
   delay = 0,
   className,

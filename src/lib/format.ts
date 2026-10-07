@@ -1,6 +1,3 @@
-// Formatters shared by Server and Client Components. Dates use a fixed time
-// zone so server-rendered and client-rendered output always match.
-
 const TIME_ZONE = "Asia/Karachi";
 
 const numberFormat = new Intl.NumberFormat("en-US");
@@ -58,15 +55,10 @@ export function formatToday(date = new Date()) {
   return longDateFormat.format(date);
 }
 
-/**
- * Test ride dates are calendar days stored as UTC midnight, so they are
- * formatted in UTC to avoid shifting to the previous/next day.
- */
 export function formatCalendarDate(iso: string) {
   return calendarDateFormat.format(new Date(iso));
 }
 
-/** "14:30" -> "2:30 PM" */
 export function formatTime(value: string) {
   const [hours, minutes] = value.split(":").map(Number);
   if (Number.isNaN(hours) || Number.isNaN(minutes)) return value;
@@ -75,7 +67,6 @@ export function formatTime(value: string) {
   return `${hour12}:${String(minutes).padStart(2, "0")} ${suffix}`;
 }
 
-/** Short, readable order reference built from the last 6 characters of the id. */
 export function orderRef(id: string) {
   return `#${id.slice(-6).toUpperCase()}`;
 }
@@ -84,6 +75,10 @@ export function capitalize(value: string) {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
-export function pluralize(count: number, singular: string, plural = `${singular}s`) {
+export function pluralize(
+  count: number,
+  singular: string,
+  plural = `${singular}s`,
+) {
   return `${formatNumber(count)} ${count === 1 ? singular : plural}`;
 }

@@ -2,7 +2,10 @@
 
 import { Package, Wrench } from "lucide-react";
 import { CrudProvider, useCrudDialogs } from "@/components/crud";
-import { StoreItemForm, storeItemTitle } from "@/components/store-items/store-item-form";
+import {
+  StoreItemForm,
+  storeItemTitle,
+} from "@/components/store-items/store-item-form";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { Dialog } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/toast";
@@ -57,8 +60,8 @@ export function StoreItemsManager({
         confirmLabel={`Delete ${singular}`}
         description={
           <>
-            <b className="text-white">{deleting?.name}</b> and its image will be permanently deleted
-            and removed from the website.
+            <b className="text-white">{deleting?.name}</b> and its image will be
+            permanently deleted and removed from the website.
           </>
         }
         onConfirm={() => deleteStoreItem(kind, deleting?._id ?? "")}

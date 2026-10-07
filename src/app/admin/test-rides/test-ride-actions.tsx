@@ -45,7 +45,11 @@ export function TestRideActions({ request }: { request: TestRideRequest }) {
         <Check />
         Accept
       </Button>
-      <Button variant="danger-soft" size="sm" onClick={() => setDialog("reject")}>
+      <Button
+        variant="danger-soft"
+        size="sm"
+        onClick={() => setDialog("reject")}
+      >
         <CircleX />
         Reject
       </Button>
@@ -60,12 +64,13 @@ export function TestRideActions({ request }: { request: TestRideRequest }) {
         description={
           <div className="space-y-3">
             <p>
-              <b className="text-white">{request.requesterName}</b> wants to ride{" "}
-              <b className="text-white">{bikeName}</b> in {request.preferredCity} on {slot}.
+              <b className="text-white">{request.requesterName}</b> wants to
+              ride <b className="text-white">{bikeName}</b> in{" "}
+              {request.preferredCity} on {slot}.
             </p>
             <p className="text-muted">
-              The requester isn&apos;t notified automatically. Contact them on WhatsApp or by
-              email to confirm the details.
+              The requester isn&apos;t notified automatically. Contact them on
+              WhatsApp or by email to confirm the details.
             </p>
           </div>
         }

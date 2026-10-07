@@ -6,7 +6,13 @@ import { useRef, useState } from "react";
 import { useFormSubmit } from "@/components/crud";
 import { Button } from "@/components/ui/button";
 import { DialogBody, DialogFooter } from "@/components/ui/dialog";
-import { Field, FormAlert, FormSection, Input, Textarea } from "@/components/ui/form";
+import {
+  Field,
+  FormAlert,
+  FormSection,
+  Input,
+  Textarea,
+} from "@/components/ui/form";
 import { ImageUpload } from "@/components/ui/image-upload";
 import { saveStoreItem } from "@/lib/actions/catalog";
 import { MAX_FEATURES, SLUG_PATTERN } from "@/lib/constants";
@@ -21,7 +27,12 @@ interface StoreItemFormProps {
   onCancel: () => void;
 }
 
-export function StoreItemForm({ kind, item, onSuccess, onCancel }: StoreItemFormProps) {
+export function StoreItemForm({
+  kind,
+  item,
+  onSuccess,
+  onCancel,
+}: StoreItemFormProps) {
   const { singular } = STORE_KINDS[kind];
   const idPrefix = `${kind}-form`;
 
@@ -30,7 +41,10 @@ export function StoreItemForm({ kind, item, onSuccess, onCancel }: StoreItemForm
   const [slugEdited, setSlugEdited] = useState(Boolean(item));
   const [inStock, setInStock] = useState(item?.inStock ?? true);
   const [features, setFeatures] = useState(() =>
-    (item?.features.length ? item.features : [""]).map((value, id) => ({ id, value })),
+    (item?.features.length ? item.features : [""]).map((value, id) => ({
+      id,
+      value,
+    })),
   );
   const nextFeatureId = useRef(features.length);
 
@@ -50,7 +64,11 @@ export function StoreItemForm({ kind, item, onSuccess, onCancel }: StoreItemForm
       <DialogBody className="space-y-8">
         <FormSection title="Details">
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Name" htmlFor={`${idPrefix}-name`} className="sm:col-span-2">
+            <Field
+              label="Name"
+              htmlFor={`${idPrefix}-name`}
+              className="sm:col-span-2"
+            >
               <Input
                 id={`${idPrefix}-name`}
                 name="name"
@@ -59,7 +77,9 @@ export function StoreItemForm({ kind, item, onSuccess, onCancel }: StoreItemForm
                   setName(event.target.value);
                   if (!slugEdited) setSlug(slugify(event.target.value));
                 }}
-                placeholder={kind === "accessories" ? "e.g. Helmet" : "e.g. Battery"}
+                placeholder={
+                  kind === "accessories" ? "e.g. Helmet" : "e.g. Battery"
+                }
                 required
                 maxLength={150}
                 data-autofocus
@@ -70,7 +90,11 @@ export function StoreItemForm({ kind, item, onSuccess, onCancel }: StoreItemForm
               label="Slug"
               htmlFor={`${idPrefix}-slug`}
               optional={!item}
-              hint={item ? "Changing it changes the website address." : "Generated from the name if left blank."}
+              hint={
+                item
+                  ? "Changing it changes the website address."
+                  : "Generated from the name if left blank."
+              }
             >
               <Input
                 id={`${idPrefix}-slug`}
@@ -101,11 +125,15 @@ export function StoreItemForm({ kind, item, onSuccess, onCancel }: StoreItemForm
               />
             </Field>
 
-            <label className="flex cursor-pointer items-center justify-between gap-4 rounded-xl border border-line-strong bg-field px-4 py-3 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-brand/40 sm:col-span-2">
+            <label className="flex cursor-pointer items-center justify-between gap-4 rounded-xl border border-line-strong bg-field px-4 py-3 has-focus-visible:ring-2 has-focus-visible:ring-brand/40 sm:col-span-2">
               <span>
-                <span className="block text-sm font-medium text-ink-soft">In stock</span>
+                <span className="block text-sm font-medium text-ink-soft">
+                  In stock
+                </span>
                 <span className="block text-xs text-subtle">
-                  {inStock ? "Shown as available on the website." : "Shown as out of stock on the website."}
+                  {inStock
+                    ? "Shown as available on the website."
+                    : "Shown as out of stock on the website."}
                 </span>
               </span>
               <input
@@ -150,7 +178,12 @@ export function StoreItemForm({ kind, item, onSuccess, onCancel }: StoreItemForm
           </div>
         </FormSection>
 
-        <ImageUpload name="image" label="Image" currentUrl={item?.imageUrl} required />
+        <ImageUpload
+          name="image"
+          label="Image"
+          currentUrl={item?.imageUrl}
+          required
+        />
 
         <FormSection
           title="Features"
@@ -174,7 +207,9 @@ export function StoreItemForm({ kind, item, onSuccess, onCancel }: StoreItemForm
                     onChange={(event) => {
                       const value = event.target.value;
                       setFeatures((current) =>
-                        current.map((entry) => (entry.id === feature.id ? { ...entry, value } : entry)),
+                        current.map((entry) =>
+                          entry.id === feature.id ? { ...entry, value } : entry,
+                        ),
                       );
                     }}
                     maxLength={200}

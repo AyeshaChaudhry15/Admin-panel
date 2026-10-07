@@ -6,7 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Field, FormAlert, Input } from "@/components/ui/form";
 import { requestPasswordReset } from "@/lib/actions/auth";
 
-export function ForgotPasswordForm({ defaultEmail }: { defaultEmail?: string }) {
+export function ForgotPasswordForm({
+  defaultEmail,
+}: {
+  defaultEmail?: string;
+}) {
   const [state, formAction, pending] = useActionState(requestPasswordReset, {
     email: defaultEmail,
   });

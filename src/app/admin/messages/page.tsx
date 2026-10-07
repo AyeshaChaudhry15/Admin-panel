@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { MessageSquare, SearchX } from "lucide-react";
 import { Suspense } from "react";
-import { MessageActions, MessageStatusSelect } from "@/app/admin/messages/message-actions";
+import {
+  MessageActions,
+  MessageStatusSelect,
+} from "@/app/admin/messages/message-actions";
 import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/ui/empty-state";
 import { FilterTabs, SelectFilter } from "@/components/ui/filters";
@@ -21,7 +24,9 @@ export const metadata: Metadata = { title: "Messages" };
 
 const PATH = "/admin/messages";
 
-export default async function MessagesPage({ searchParams }: PageProps<"/admin/messages">) {
+export default async function MessagesPage({
+  searchParams,
+}: PageProps<"/admin/messages">) {
   const params = await searchParams;
   const page = parsePage(params.page);
   const status = parseOneOf(params.status, CONTACT_STATUSES);
@@ -66,18 +71,26 @@ export default async function MessagesPage({ searchParams }: PageProps<"/admin/m
                 ]}
                 hrefs={Object.fromEntries([
                   ["", filterHref({ reason: null })],
-                  ...CONTACT_REASONS.map((value) => [value, filterHref({ reason: value })]),
+                  ...CONTACT_REASONS.map((value) => [
+                    value,
+                    filterHref({ reason: value }),
+                  ]),
                 ])}
               />
             </>
           }
         />
 
-        <Suspense key={`${status}-${reason}-${page}`} fallback={<TableSkeleton columns={5} />}>
+        <Suspense
+          key={`${status}-${reason}-${page}`}
+          fallback={<TableSkeleton columns={5} />}
+        >
           <MessagesTable
             query={{ page, status, reason }}
             filtered={Boolean(status || reason)}
-            hrefForPage={(target) => hrefWith(PATH, current, { page: target > 1 ? target : null })}
+            hrefForPage={(target) =>
+              hrefWith(PATH, current, { page: target > 1 ? target : null })
+            }
           />
         </Suspense>
       </Panel>
@@ -96,13 +109,21 @@ async function MessagesTable({
 }) {
   const { submissions, pagination } = await getContactSubmissions(query);
 
-  if (submissions.length === 0 && pagination.totalPages > 0 && query.page > pagination.totalPages) {
+  if (
+    submissions.length === 0 &&
+    pagination.totalPages > 0 &&
+    query.page > pagination.totalPages
+  ) {
     redirect(hrefForPage(pagination.totalPages));
   }
 
   if (submissions.length === 0) {
     return filtered ? (
-      <EmptyState icon={SearchX} title="No messages match" description="Try another status or reason." />
+      <EmptyState
+        icon={SearchX}
+        title="No messages match"
+        description="Try another status or reason."
+      />
     ) : (
       <EmptyState
         icon={MessageSquare}
@@ -114,7 +135,7 @@ async function MessagesTable({
 
   return (
     <>
-      <Table className="min-w-[900px]">
+      <Table className="min-w-225">
         <TableHead>
           <TH>From</TH>
           <TH>Reason</TH>
@@ -128,17 +149,23 @@ async function MessagesTable({
             <TR key={message._id}>
               <TD>
                 <p className="font-medium text-white">{message.fullName}</p>
-                <p className="mt-0.5 max-w-52 truncate text-xs text-muted">{message.email}</p>
+                <p className="mt-0.5 max-w-52 truncate text-xs text-muted">
+                  {message.email}
+                </p>
               </TD>
               <TD>
                 <Badge tone="neutral">{message.reason}</Badge>
               </TD>
               <TD>
                 <p className="line-clamp-2 max-w-sm text-sm text-ink-soft">
-                  {message.message || <span className="text-subtle italic">No message</span>}
+                  {message.message || (
+                    <span className="text-subtle italic">No message</span>
+                  )}
                 </p>
               </TD>
-              <TD className="whitespace-nowrap text-muted">{formatDate(message.createdAt)}</TD>
+              <TD className="whitespace-nowrap text-muted">
+                {formatDate(message.createdAt)}
+              </TD>
               <TD>
                 <MessageStatusSelect message={message} />
               </TD>
@@ -149,7 +176,11 @@ async function MessagesTable({
           ))}
         </tbody>
       </Table>
-      <Pagination pagination={pagination} noun="messages" hrefForPage={hrefForPage} />
+      <Pagination
+        pagination={pagination}
+        noun="messages"
+        hrefForPage={hrefForPage}
+      />
     </>
   );
 }

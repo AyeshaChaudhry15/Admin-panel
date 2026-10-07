@@ -71,7 +71,6 @@ export function OrderActions({ order }: { order: Order }) {
   const [inFlight, setInFlight] = useState<OrderStatus | null>(null);
   const { shippingAddress: address } = order;
   const closed = order.nextStatuses.length === 0;
-  // Destructive changes first so the main action sits on the right.
   const nextStatuses = order.nextStatuses.toSorted(
     (a, b) =>
       Number(TRANSITIONS[a].variant === "primary") - Number(TRANSITIONS[b].variant === "primary"),
