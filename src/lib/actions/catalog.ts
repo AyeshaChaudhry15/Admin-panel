@@ -128,9 +128,19 @@ export async function saveBike(
     const image = readImage(formData, "image");
 
     const specs: Partial<BikeSpecs> = {};
-    for (const { key } of BIKE_SPEC_FIELDS) {
+    for (const { key, label, unit } of BIKE_SPEC_FIELDS) {
       const value = readText(formData, `specs.${key}`);
-      if (value) specs[key] = value;
+      if (!value) continue;
+      if (!unit) {
+        specs[key] = value;
+        continue;
+      }
+
+      const amount = Number(value);
+      if (!Number.isFinite(amount) || amount <= 0) {
+        throw new InputError(`${label} must be a number greater than 0.`);
+      }
+      specs[key] = `${amount} ${unit}`;
     }
 
     if (id === null) {

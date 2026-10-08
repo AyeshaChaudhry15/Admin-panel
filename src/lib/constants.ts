@@ -40,13 +40,14 @@ export const BIKE_SPEC_FIELDS: readonly {
   key: keyof BikeSpecs;
   label: string;
   placeholder: string;
+  unit?: string;
 }[] = [
-  { key: "range", label: "Range", placeholder: "e.g. 70 km" },
-  { key: "topSpeed", label: "Top speed", placeholder: "e.g. 65 km/h" },
+  { key: "range", label: "Range", placeholder: "e.g. 70", unit: "km" },
+  { key: "topSpeed", label: "Top speed", placeholder: "e.g. 65", unit: "km/h" },
   { key: "battery", label: "Battery", placeholder: "e.g. 72V 30Ah" },
-  { key: "chargingTime", label: "Charging time", placeholder: "e.g. 4.5 hrs" },
-  { key: "motorPower", label: "Motor power", placeholder: "e.g. 3000W" },
-  { key: "weight", label: "Weight", placeholder: "e.g. 115 kg" },
+  { key: "chargingTime", label: "Charging time", placeholder: "e.g. 4.5", unit: "hrs" },
+  { key: "motorPower", label: "Motor power", placeholder: "e.g. 3000", unit: "W" },
+  { key: "weight", label: "Weight", placeholder: "e.g. 115", unit: "kg" },
   { key: "warranty", label: "Warranty", placeholder: "e.g. 2 Years" },
 ];
 
