@@ -22,9 +22,10 @@ import { isObjectId } from "@/lib/utils";
 import type { ActionResult } from "@/types/actions";
 import type {
   AccessoryInput,
-  BikeInput,
+  BikeCreateInput,
   BikeSpecs,
   BikeType,
+  BikeUpdateInput,
   BrandInput,
   MessageResponse,
 } from "@/types/api";
@@ -122,33 +123,50 @@ export async function saveBike(
       throw new InputError("Rating must be between 0 and 5.");
     }
 
-    const fields: BikeInput = {
-      name,
-      brand,
-      type,
-      price: readPrice(formData),
-      rating,
-      specs: Object.fromEntries(
-        BIKE_SPEC_FIELDS.map(({ key }) => [
-          key,
-          readText(formData, `specs.${key}`),
-        ]),
-      ) as unknown as BikeSpecs,
-    };
-
+    const price = readPrice(formData);
     const slug = readSlug(formData);
-    if (slug || id !== null) fields.slug = slug;
-
     const image = readImage(formData, "image");
 
+    const specs: Partial<BikeSpecs> = {};
+    for (const { key } of BIKE_SPEC_FIELDS) {
+      const value = readText(formData, `specs.${key}`);
+      if (value) specs[key] = value;
+    }
+
     if (id === null) {
+      const missing = BIKE_SPEC_FIELDS.filter(({ key }) => !specs[key]);
+      if (missing.length > 0) {
+        throw new InputError(
+          `Fill in every spec. Missing: ${missing.map(({ label }) => label).join(", ")}.`,
+        );
+      }
       if (!image) throw new InputError("Model image is required.");
+
+      const fields: BikeCreateInput = {
+        name,
+        brand,
+        type,
+        price,
+        rating,
+        specs: specs as BikeSpecs,
+        slug: slug || undefined,
+      };
       await api("/bikes", {
         method: "POST",
         body: requestBody(fields, { image }),
       });
       return `${name} was added.`;
     }
+
+    const fields: BikeUpdateInput = {
+      name,
+      slug,
+      brand,
+      type,
+      price,
+      rating,
+      specs: Object.keys(specs).length > 0 ? specs : undefined,
+    };
 
     await api(`/bikes/${assertId(id)}`, {
       method: "PATCH",

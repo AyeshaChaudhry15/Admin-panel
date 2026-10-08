@@ -1,4 +1,5 @@
 import type {
+  BikeListQuery,
   BikeSpecs,
   BikeType,
   ContactReason,
@@ -49,6 +50,22 @@ export const BIKE_SPEC_FIELDS: readonly {
   { key: "warranty", label: "Warranty", placeholder: "e.g. 2 Years" },
 ];
 
+type BikeNumberKey = Exclude<
+  keyof BikeListQuery,
+  "page" | "limit" | "search" | "brand" | "type"
+>;
+
+export const BIKE_NUMBER_FILTERS: readonly {
+  label: string;
+  unit: string;
+  min: BikeNumberKey;
+  max: BikeNumberKey;
+}[] = [
+  { label: "Price", unit: "PKR", min: "minPrice", max: "maxPrice" },
+  { label: "Top speed", unit: "km/h", min: "minTopSpeed", max: "maxTopSpeed" },
+  { label: "Range", unit: "km", min: "minRange", max: "maxRange" },
+];
+
 export const ORDER_STATUSES: readonly OrderStatus[] = [
   "pending",
   "processing",
@@ -83,7 +100,13 @@ export const CONTACT_REASONS: readonly ContactReason[] = [
   "General Inquiry",
 ];
 
-export type Tone = "brand" | "info" | "violet" | "warning" | "danger" | "neutral";
+export type Tone =
+  | "brand"
+  | "info"
+  | "violet"
+  | "warning"
+  | "danger"
+  | "neutral";
 
 export const ORDER_STATUS_TONE: Record<OrderStatus, Tone> = {
   pending: "warning",

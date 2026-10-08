@@ -9,8 +9,9 @@ import { Field, FormAlert, FormSection, Input, Select } from "@/components/ui/fo
 import { ImageUpload } from "@/components/ui/image-upload";
 import { saveBike } from "@/lib/actions/catalog";
 import { BIKE_SPEC_FIELDS, SLUG_PATTERN } from "@/lib/constants";
+import { formatNumber } from "@/lib/format";
 import { cn, slugify } from "@/lib/utils";
-import type { Bike, Brand } from "@/types/api";
+import type { Bike, BikeSpecs, Brand } from "@/types/api";
 
 export type BrandOption = Pick<Brand, "_id" | "displayName">;
 
@@ -29,6 +30,29 @@ const TYPE_OPTIONS = [
   },
 ] as const;
 
+const FILTERED_SPECS: Partial<Record<keyof BikeSpecs, { unit: string; filter: string }>> = {
+  topSpeed: { unit: "km/h", filter: "top speed" },
+  range: { unit: "km", filter: "range" },
+};
+
+function firstNumber(text: string) {
+  const match = text.match(/\d[\d,]*(?:\.\d+)?/);
+  return match ? Number(match[0].replace(/,/g, "")) : null;
+}
+
+function FilterHint({ text, unit, filter }: { text: string; unit: string; filter: string }) {
+  if (!text.trim()) return <>Its first number is used by the {filter} filter.</>;
+
+  const value = firstNumber(text);
+  return value === null ? (
+    <span className="text-warning">No number found, so this model won&apos;t match {filter} filters.</span>
+  ) : (
+    <>
+      Filtered as <span className="font-semibold text-ink-soft">{formatNumber(value)} {unit}</span>
+    </>
+  );
+}
+
 interface BikeFormProps {
   bike?: Bike;
   brands: BrandOption[];
@@ -40,6 +64,10 @@ export function BikeForm({ bike, brands, onSuccess, onCancel }: BikeFormProps) {
   const [name, setName] = useState(bike?.name ?? "");
   const [slug, setSlug] = useState(bike?.slug ?? "");
   const [slugEdited, setSlugEdited] = useState(Boolean(bike));
+  const [specText, setSpecText] = useState<Partial<BikeSpecs>>({
+    topSpeed: bike?.specs.topSpeed ?? "",
+    range: bike?.specs.range ?? "",
+  });
 
   const { error, pending, handleSubmit } = useFormSubmit(
     (formData) => saveBike(bike?._id ?? null, formData),
@@ -74,7 +102,7 @@ export function BikeForm({ bike, brands, onSuccess, onCancel }: BikeFormProps) {
               className="sm:col-span-2"
               hint={
                 bike
-                  ? "Changing the slug changes this model's address on the website."
+                  ? "Renaming keeps this slug so existing links work. Changing it changes the model's address; clear it to generate a new one from the name."
                   : "Used in the website address. Leave blank to generate it from the name."
               }
             >
@@ -165,19 +193,39 @@ export function BikeForm({ bike, brands, onSuccess, onCancel }: BikeFormProps) {
 
         <FormSection
           title="Specifications"
-          description="Shown as-is on the website, so include units. Leave blank if unknown."
+          description={
+            bike
+              ? "Shown as-is on the website, so include units. Filled-in specs can't be cleared."
+              : "All seven are required. Shown as-is on the website, so include units."
+          }
         >
           <div className="grid gap-4 sm:grid-cols-2">
-            {BIKE_SPEC_FIELDS.map(({ key, label, placeholder }) => (
-              <Field key={key} label={label} htmlFor={`bike-spec-${key}`}>
-                <Input
-                  id={`bike-spec-${key}`}
-                  name={`specs.${key}`}
-                  defaultValue={bike?.specs[key]}
-                  placeholder={placeholder}
-                />
-              </Field>
-            ))}
+            {BIKE_SPEC_FIELDS.map(({ key, label, placeholder }) => {
+              const filtered = FILTERED_SPECS[key];
+              const saved = bike?.specs[key]?.trim();
+
+              return (
+                <Field
+                  key={key}
+                  label={label}
+                  htmlFor={`bike-spec-${key}`}
+                  optional={Boolean(bike) && !saved}
+                  hint={filtered && <FilterHint text={specText[key] ?? ""} {...filtered} />}
+                >
+                  <Input
+                    id={`bike-spec-${key}`}
+                    name={`specs.${key}`}
+                    defaultValue={bike?.specs[key]}
+                    onChange={
+                      filtered &&
+                      ((event) => setSpecText((prev) => ({ ...prev, [key]: event.target.value })))
+                    }
+                    placeholder={placeholder}
+                    required={!bike || Boolean(saved)}
+                  />
+                </Field>
+              );
+            })}
           </div>
         </FormSection>
       </DialogBody>

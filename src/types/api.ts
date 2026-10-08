@@ -64,6 +64,8 @@ export interface Bike {
   imageUrl: string;
   imagePublicId: string;
   specs: BikeSpecs;
+  topSpeedKmh: number | null;
+  rangeKm: number | null;
   createdAt: ISODate;
   updatedAt: ISODate;
 }
@@ -240,8 +242,15 @@ export interface PageQuery {
 }
 
 export interface BikeListQuery extends PageQuery {
-  brand?: ObjectId;
+  search?: string;
+  brand?: string;
   type?: BikeType;
+  minPrice?: number;
+  maxPrice?: number;
+  minTopSpeed?: number;
+  maxTopSpeed?: number;
+  minRange?: number;
+  maxRange?: number;
 }
 
 export interface AccessoryListQuery extends PageQuery {
@@ -282,7 +291,17 @@ export type BrandInput = Partial<
   >
 >;
 
-export interface BikeInput {
+export interface BikeCreateInput {
+  name: string;
+  brand: ObjectId;
+  type: BikeType;
+  price: number;
+  specs: BikeSpecs;
+  rating?: number;
+  slug?: string;
+}
+
+export interface BikeUpdateInput {
   name?: string;
   slug?: string;
   brand?: ObjectId;
