@@ -37,16 +37,34 @@ const STATUS_HELP: Record<OrderStatus, string> = {
 
 const TRANSITIONS: Record<
   OrderStatus,
-  { label: string; icon: LucideIcon; variant: "primary" | "danger-soft"; confirm?: string }
+  {
+    label: string;
+    icon: LucideIcon;
+    variant: "primary" | "danger-soft";
+    confirm?: string;
+  }
 > = {
-  pending: { label: "Back to pending", icon: ShoppingBag, variant: "primary" },
-  processing: { label: "Confirm order", icon: PackageCheck, variant: "primary" },
-  delivered: { label: "Mark delivered", icon: Truck, variant: "primary" },
+  pending: {
+    label: "Back to pending",
+    icon: ShoppingBag,
+    variant: "primary",
+  },
+  processing: {
+    label: "Confirm order",
+    icon: PackageCheck,
+    variant: "primary",
+  },
+  delivered: {
+    label: "Mark delivered",
+    icon: Truck,
+    variant: "primary",
+  },
   completed: {
     label: "Mark completed",
     icon: CircleCheck,
     variant: "primary",
-    confirm: "Mark this order as completed? Only do this once the cash has been collected.",
+    confirm:
+      "Mark this order as completed? Only do this once the cash has been collected.",
   },
   cancelled: {
     label: "Cancel order",
@@ -71,9 +89,11 @@ export function OrderActions({ order }: { order: Order }) {
   const [inFlight, setInFlight] = useState<OrderStatus | null>(null);
   const { shippingAddress: address } = order;
   const closed = order.nextStatuses.length === 0;
+
   const nextStatuses = order.nextStatuses.toSorted(
     (a, b) =>
-      Number(TRANSITIONS[a].variant === "primary") - Number(TRANSITIONS[b].variant === "primary"),
+      Number(TRANSITIONS[a].variant === "primary") -
+      Number(TRANSITIONS[b].variant === "primary"),
   );
 
   function close() {
@@ -90,9 +110,11 @@ export function OrderActions({ order }: { order: Order }) {
 
     setError(null);
     setInFlight(status);
+
     startTransition(async () => {
       try {
         const result = await updateOrderStatus(order._id, status);
+
         if (result.ok) {
           toast.success(result.message);
           close();
@@ -108,7 +130,12 @@ export function OrderActions({ order }: { order: Order }) {
 
   return (
     <>
-      <Button variant="secondary" size="sm" onClick={() => setOpen(true)}>
+      <Button
+        variant="secondary"
+        size="sm"
+        onClick={() => setOpen(true)}
+        className="border-[#0057D9]/30 hover:border-[#0057D9] hover:bg-[#0057D9]/10 hover:text-[#0057D9]"
+      >
         <Eye />
         {closed ? "View" : "Manage"}
       </Button>
@@ -123,61 +150,87 @@ export function OrderActions({ order }: { order: Order }) {
         busy={pending}
       >
         <DialogBody className="space-y-6">
-          <div className="flex flex-col gap-2 rounded-xl border border-line bg-field p-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-2 rounded-xl border border-[#0057D9]/20 bg-[#0057D9]/5 p-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
               <Badge tone={ORDER_STATUS_TONE[order.status]} dot>
                 {capitalize(order.status)}
               </Badge>
-              <p className="text-sm text-muted">{STATUS_HELP[order.status]}</p>
+
+              <p className="text-sm text-muted">
+                {STATUS_HELP[order.status]}
+              </p>
             </div>
           </div>
 
           <section>
-            <h3 className="mb-3 text-xs font-bold tracking-[0.12em] text-muted uppercase">Item</h3>
+            <h3 className="mb-3 text-xs font-bold tracking-[0.12em] text-[#0057D9] uppercase">
+              Item
+            </h3>
+
             <div className="flex items-center gap-4 rounded-xl border border-line p-4">
-              <div className="relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-line-strong bg-field">
+              <div className="relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-[#0057D9]/30 bg-[#0057D9]/5">
                 {order.bike?.imageUrl ? (
-                  <Image src={order.bike.imageUrl} alt="" fill sizes="64px" className="object-contain p-1" />
+                  <Image
+                    src={order.bike.imageUrl}
+                    alt=""
+                    fill
+                    sizes="64px"
+                    className="object-contain p-1"
+                  />
                 ) : (
-                  <Bike className="size-6 text-subtle" />
+                  <Bike className="size-6 text-[#0057D9]" />
                 )}
               </div>
+
               <div className="min-w-0 flex-1">
                 <p className="font-semibold text-white">{order.bikeName}</p>
+
                 <p className="mt-0.5 text-sm text-muted">
                   {order.quantity} × {formatPKR(order.unitPrice)}
                   {!order.bike && " · no longer in the catalog"}
                 </p>
               </div>
+
               <div className="text-right">
                 <p className="text-xs text-muted">Total</p>
-                <p className="text-lg font-bold text-white tabular-nums">{formatPKR(order.totalAmount)}</p>
+
+                <p className="text-lg font-bold text-[#FF8A00] tabular-nums">
+                  {formatPKR(order.totalAmount)}
+                </p>
               </div>
             </div>
-            <p className="mt-2 text-xs text-subtle">Payment: cash on delivery</p>
+
+            <p className="mt-2 text-xs text-subtle">
+              Payment: cash on delivery
+            </p>
           </section>
 
           <section>
-            <h3 className="mb-3 text-xs font-bold tracking-[0.12em] text-muted uppercase">
+            <h3 className="mb-3 text-xs font-bold tracking-[0.12em] text-[#0057D9] uppercase">
               Customer
             </h3>
+
             <div className="grid gap-3 rounded-xl border border-line p-4 sm:grid-cols-2">
               <div>
-                <p className="font-semibold text-white">{address.fullName}</p>
+                <p className="font-semibold text-white">
+                  {address.fullName}
+                </p>
+
                 <div className="mt-2 flex flex-wrap gap-2">
                   <a
                     href={`tel:${address.phoneNumber}`}
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-line-strong bg-field px-2.5 py-1.5 text-xs font-medium text-ink-soft transition-colors hover:border-info hover:text-info"
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-[#0057D9]/30 bg-[#0057D9]/5 px-2.5 py-1.5 text-xs font-medium text-[#0057D9] transition-colors hover:border-[#0057D9] hover:bg-[#0057D9]/10"
                   >
                     <Phone className="size-3.5" />
                     {address.phoneNumber}
                   </a>
+
                   {address.phoneNumber.startsWith("+") && (
                     <a
                       href={whatsAppUrl(address.phoneNumber)}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-1.5 rounded-lg border border-brand/30 bg-brand/10 px-2.5 py-1.5 text-xs font-medium text-brand transition-colors hover:bg-brand/20"
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-[#FF8A00]/30 bg-[#FF8A00]/10 px-2.5 py-1.5 text-xs font-medium text-[#FF8A00] transition-colors hover:border-[#FF8A00] hover:bg-[#FF8A00]/20"
                     >
                       <MessageCircle className="size-3.5" />
                       WhatsApp
@@ -185,8 +238,10 @@ export function OrderActions({ order }: { order: Order }) {
                   )}
                 </div>
               </div>
+
               <div className="flex gap-2 text-sm text-ink-soft">
-                <MapPin className="mt-0.5 size-4 shrink-0 text-muted" />
+                <MapPin className="mt-0.5 size-4 shrink-0 text-[#FF8A00]" />
+
                 <p className="whitespace-pre-line">
                   {address.address}
                   {"\n"}
@@ -201,21 +256,43 @@ export function OrderActions({ order }: { order: Order }) {
 
         <DialogFooter>
           {closed ? (
-            <Button variant="secondary" onClick={close}>
+            <Button
+              variant="secondary"
+              onClick={close}
+              className="border-[#0057D9]/30 hover:border-[#0057D9] hover:text-[#0057D9]"
+            >
               Close
             </Button>
           ) : confirming ? (
             <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-sm text-ink-soft">{TRANSITIONS[confirming].confirm}</p>
+              <p className="text-sm text-ink-soft">
+                {TRANSITIONS[confirming].confirm}
+              </p>
+
               <div className="flex flex-col-reverse gap-2 sm:flex-row">
-                <Button variant="secondary" onClick={() => setConfirming(null)} disabled={pending}>
+                <Button
+                  variant="secondary"
+                  onClick={() => setConfirming(null)}
+                  disabled={pending}
+                  className="border-[#0057D9]/30 hover:border-[#0057D9] hover:text-[#0057D9]"
+                >
                   Go back
                 </Button>
+
                 <Button
-                  variant={TRANSITIONS[confirming].variant === "primary" ? "primary" : "danger"}
+                  variant={
+                    TRANSITIONS[confirming].variant === "primary"
+                      ? "primary"
+                      : "danger"
+                  }
                   onClick={() => move(confirming)}
                   pending={pending}
                   autoFocus
+                  className={
+                    TRANSITIONS[confirming].variant === "primary"
+                      ? "bg-[#FF8A00] text-white hover:bg-[#E67B00]"
+                      : undefined
+                  }
                 >
                   Yes, {TRANSITIONS[confirming].label.toLowerCase()}
                 </Button>
@@ -224,6 +301,7 @@ export function OrderActions({ order }: { order: Order }) {
           ) : (
             nextStatuses.map((status) => {
               const { label, icon: Icon, variant } = TRANSITIONS[status];
+
               return (
                 <Button
                   key={status}
@@ -231,6 +309,11 @@ export function OrderActions({ order }: { order: Order }) {
                   onClick={() => move(status)}
                   disabled={pending}
                   pending={pending && inFlight === status}
+                  className={
+                    variant === "primary"
+                      ? "bg-[#FF8A00] text-white hover:bg-[#E67B00]"
+                      : undefined
+                  }
                 >
                   {!(pending && inFlight === status) && <Icon />}
                   {label}

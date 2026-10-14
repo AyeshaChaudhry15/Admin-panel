@@ -27,8 +27,8 @@ export default async function DashboardPage() {
         title="Dashboard"
         description={`Welcome back, ${firstName}. Manage your products, brands, orders and customer requests.`}
         actions={
-          <span className="inline-flex h-11 items-center gap-2.5 rounded-xl border border-line-strong bg-surface px-4 text-sm text-ink-soft">
-            <CalendarDays className="size-4 text-brand" />
+          <span className="inline-flex h-11 items-center gap-2.5 rounded-xl border border-[#0057D9]/30 bg-[#0057D9]/10 px-4 text-sm text-[#DCE9FF]">
+            <CalendarDays className="size-4 text-[#FF8A00]" />
             {formatToday()}
           </span>
         }

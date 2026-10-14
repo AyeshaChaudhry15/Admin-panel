@@ -40,9 +40,9 @@ export function ModelSearch({ basePath, current }: FilterProps) {
   return (
     <div className="relative w-full sm:w-72">
       {pending ? (
-        <Spinner className="absolute top-1/2 left-4 size-3.5 -translate-y-1/2 text-brand" />
+        <Spinner className="absolute top-1/2 left-4 size-3.5 -translate-y-1/2 text-[#0057D9]" />
       ) : (
-        <Search className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-subtle" />
+        <Search className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-[#FF8A00]" />
       )}
 
       <input
@@ -53,7 +53,7 @@ export function ModelSearch({ basePath, current }: FilterProps) {
         aria-label="Search models by name"
         className={cn(
           fieldStyles,
-          "h-11 pr-10 pl-11 [&::-webkit-search-cancel-button]:hidden",
+          "h-11 border-[#1d2b38] pr-10 pl-11 focus:border-[#0057D9] focus:ring-[#0057D9]/30 [&::-webkit-search-cancel-button]:hidden",
         )}
       />
 
@@ -62,7 +62,7 @@ export function ModelSearch({ basePath, current }: FilterProps) {
           type="button"
           onClick={() => update("")}
           aria-label="Clear search"
-          className="absolute top-1/2 right-3 flex -translate-y-1/2 items-center justify-center rounded-md p-0.5 text-subtle transition-colors hover:text-white"
+          className="absolute top-1/2 right-3 flex -translate-y-1/2 items-center justify-center rounded-md p-0.5 text-[#FF8A00] transition-colors hover:text-[#0057D9]"
         >
           <X className="size-4" />
         </button>
@@ -91,15 +91,20 @@ export function NumberFilters({ basePath, current }: FilterProps) {
       label="Filter by price, top speed and range"
       triggerClassName={buttonStyles({
         variant: "secondary",
-        className: "w-full sm:w-auto",
+        className:
+          "w-full border-[#0057D9]/40 text-white hover:border-[#0057D9] hover:bg-[#0057D9]/10 sm:w-auto",
       })}
       panelClassName="w-[min(20rem,calc(100vw-2rem))]"
       trigger={
         <>
-          {pending ? <Spinner className="text-brand" /> : <SlidersHorizontal />}
+          {pending ? (
+            <Spinner className="text-[#0057D9]" />
+          ) : (
+            <SlidersHorizontal className="text-[#FF8A00]" />
+          )}
           Filters
           {active > 0 && (
-            <span className="rounded-full bg-brand px-1.5 text-[11px] leading-4.5 text-brand-ink tabular-nums">
+            <span className="rounded-full bg-[#FF8A00] px-1.5 text-[11px] leading-4.5 text-white tabular-nums">
               {active}
             </span>
           )}
@@ -141,10 +146,12 @@ function NumberFiltersForm({
         for (const { label, min, max } of BIKE_NUMBER_FILTERS) {
           const low = String(formData.get(min) ?? "").trim();
           const high = String(formData.get(max) ?? "").trim();
+
           if (low && high && Number(low) > Number(high)) {
             setError(`${label}: the minimum can't be more than the maximum.`);
             return;
           }
+
           patch[min] = low || null;
           patch[max] = high || null;
         }
@@ -156,8 +163,10 @@ function NumberFiltersForm({
       {BIKE_NUMBER_FILTERS.map(({ label, unit, min, max }) => (
         <fieldset key={min}>
           <legend className="mb-2 text-xs font-semibold text-ink-soft">
-            {label} <span className="font-normal text-subtle">({unit})</span>
+            {label}{" "}
+            <span className="font-normal text-subtle">({unit})</span>
           </legend>
+
           <div className="grid grid-cols-2 gap-2">
             {[
               { name: min, text: "Min" },
@@ -175,7 +184,7 @@ function NumberFiltersForm({
                 }
                 placeholder={text}
                 aria-label={`${text} ${label.toLowerCase()} (${unit})`}
-                className="h-10"
+                className="h-10 border-[#1d2b38] focus:border-[#0057D9] focus:ring-[#0057D9]/30"
               />
             ))}
           </div>
@@ -188,7 +197,7 @@ function NumberFiltersForm({
         <Button
           variant="ghost"
           size="sm"
-          className="flex-1"
+          className="flex-1 text-[#0057D9] hover:bg-[#0057D9]/10 hover:text-[#0057D9]"
           disabled={!canReset}
           onClick={() =>
             onApply(Object.fromEntries(NUMBER_KEYS.map((key) => [key, null])))
@@ -196,7 +205,12 @@ function NumberFiltersForm({
         >
           Reset
         </Button>
-        <Button type="submit" size="sm" className="flex-1">
+
+        <Button
+          type="submit"
+          size="sm"
+          className="flex-1 bg-[#FF8A00] text-white hover:bg-[#e67b00]"
+        >
           Apply
         </Button>
       </div>

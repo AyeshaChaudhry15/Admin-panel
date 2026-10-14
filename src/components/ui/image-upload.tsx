@@ -69,7 +69,10 @@ export function ImageUpload({
 
   return (
     <div>
-      <p id={`${id}-label`} className="mb-2 text-sm font-medium text-ink-soft">
+      <p
+        id={`${id}-label`}
+        className="mb-2 text-sm font-medium text-[#334155]"
+      >
         {label}
       </p>
 
@@ -86,12 +89,12 @@ export function ImageUpload({
           select(event.dataTransfer.files);
         }}
         className={cn(
-          "flex min-h-40 cursor-pointer flex-col items-center justify-center gap-3 rounded-xl border border-dashed bg-field p-5 text-center transition-colors has-focus-visible:ring-2 has-focus-visible:ring-brand/40",
+          "flex min-h-40 cursor-pointer flex-col items-center justify-center gap-3 rounded-xl border border-dashed bg-[#F8FAFC] p-5 text-center transition-colors has-focus-visible:ring-2 has-focus-visible:ring-[#0057D9]/30",
           dragging
-            ? "border-brand bg-brand/5"
+            ? "border-[#0057D9] bg-[#0057D9]/5"
             : error
-              ? "border-danger/60"
-              : "border-line-strong hover:border-brand hover:bg-brand/5",
+              ? "border-[#DC2626]/60"
+              : "border-[#CBD5E1] hover:border-[#0057D9] hover:bg-[#0057D9]/5",
         )}
       >
         <AnimatePresence mode="wait" initial={false}>
@@ -103,7 +106,7 @@ export function ImageUpload({
               exit={{ opacity: 0, scale: 0.95 }}
               className="flex flex-col items-center gap-3"
             >
-              <div className="relative h-28 w-40 overflow-hidden rounded-xl border border-line-strong bg-surface">
+              <div className="relative h-28 w-40 overflow-hidden rounded-xl border border-[#CBD5E1] bg-white">
                 <Image
                   src={shownUrl}
                   alt=""
@@ -113,7 +116,7 @@ export function ImageUpload({
                   className="object-contain p-2"
                 />
               </div>
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand">
+              <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0057D9]">
                 <RefreshCw className="size-3.5" />
                 {preview
                   ? `${preview.name} · ${formatSize(preview.size)}`
@@ -128,11 +131,11 @@ export function ImageUpload({
               exit={{ opacity: 0 }}
               className="flex flex-col items-center"
             >
-              <ImagePlus className="mb-2 size-8 text-brand" />
-              <span className="text-sm font-medium text-ink-soft">
+              <ImagePlus className="mb-2 size-8 text-[#0057D9]" />
+              <span className="text-sm font-medium text-[#334155]">
                 Click to upload or drag an image here
               </span>
-              <span className="mt-1 text-xs text-subtle">
+              <span className="mt-1 text-xs text-[#94A3B8]">
                 {hint ?? "JPEG, PNG, WebP, GIF or AVIF · up to 5 MB"}
               </span>
             </m.div>
@@ -154,7 +157,7 @@ export function ImageUpload({
       </label>
 
       {error && (
-        <p role="alert" className="mt-1.5 text-xs text-danger">
+        <p role="alert" className="mt-1.5 text-xs text-[#DC2626]">
           {error}
         </p>
       )}

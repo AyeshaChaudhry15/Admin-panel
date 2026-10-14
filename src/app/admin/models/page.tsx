@@ -12,7 +12,10 @@ import {
 } from "lucide-react";
 import { Suspense } from "react";
 import { BikesManager } from "@/app/admin/models/bikes-manager";
-import { ModelSearch, NumberFilters } from "@/app/admin/models/model-filters";
+import {
+  ModelSearch,
+  NumberFilters,
+} from "@/app/admin/models/model-filters";
 import { CreateButton, RowActions } from "@/components/crud";
 import { SectionBoundary } from "@/components/section-boundary";
 import { Badge } from "@/components/ui/badge";
@@ -30,7 +33,12 @@ import {
   BIKE_SPEC_FIELDS,
   BIKE_TYPES,
 } from "@/lib/constants";
-import { capitalize, formatNumber, formatPKR, pluralize } from "@/lib/format";
+import {
+  capitalize,
+  formatNumber,
+  formatPKR,
+  pluralize,
+} from "@/lib/format";
 import { getBikes, getBrands } from "@/lib/server/queries";
 import {
   firstParam,
@@ -48,13 +56,18 @@ const PATH = "/admin/models";
 
 function parseAmount(value: string | string[] | undefined) {
   const param = firstParam(value)?.trim();
+
   if (!param) return undefined;
+
   const amount = Number(param);
+
   return Number.isFinite(amount) && amount >= 0 ? amount : undefined;
 }
 
 function formatAmount(value: number, unit: string) {
-  return unit === "PKR" ? formatPKR(value) : `${formatNumber(value)} ${unit}`;
+  return unit === "PKR"
+    ? formatPKR(value)
+    : `${formatNumber(value)} ${unit}`;
 }
 
 export default async function ModelsPage({
@@ -66,16 +79,22 @@ export default async function ModelsPage({
   const page = parsePage(params.page);
   const type = parseOneOf(params.type, BIKE_TYPES);
   const brandParam = firstParam(params.brand);
+
   const brand = brands.some((item) => item._id === brandParam)
     ? brandParam
     : undefined;
+
   const search = firstParam(params.search)?.trim() || undefined;
 
   const numbers: BikeListQuery = {};
+
   for (const { min, max } of BIKE_NUMBER_FILTERS) {
     const low = parseAmount(params[min]);
     const high = parseAmount(params[max]);
-    const swap = low !== undefined && high !== undefined && low > high;
+
+    const swap =
+      low !== undefined && high !== undefined && low > high;
+
     numbers[min] = swap ? high : low;
     numbers[max] = swap ? low : high;
   }
@@ -85,37 +104,51 @@ export default async function ModelsPage({
     brand,
     search,
     ...Object.fromEntries(
-      Object.entries(numbers).map(([key, value]) => [key, value?.toString()]),
+      Object.entries(numbers).map(([key, value]) => [
+        key,
+        value?.toString(),
+      ]),
     ),
     page: page > 1 ? String(page) : undefined,
   };
-  const filterHref = (patch: Record<string, string | null>) =>
-    hrefWith(PATH, current, { ...patch, page: null });
 
-  const chips = BIKE_NUMBER_FILTERS.flatMap(({ label, unit, min, max }) => {
-    const low = numbers[min];
-    const high = numbers[max];
-    if (low === undefined && high === undefined) return [];
+  const filterHref = (
+    patch: Record<string, string | null>,
+  ) => hrefWith(PATH, current, { ...patch, page: null });
 
-    const range =
-      low !== undefined && high !== undefined
-        ? `${formatAmount(low, unit)} – ${formatAmount(high, unit)}`
-        : low !== undefined
-          ? `from ${formatAmount(low, unit)}`
-          : `up to ${formatAmount(high!, unit)}`;
+  const chips = BIKE_NUMBER_FILTERS.flatMap(
+    ({ label, unit, min, max }) => {
+      const low = numbers[min];
+      const high = numbers[max];
 
-    return [
-      {
-        key: min,
-        text: `${label}: ${range}`,
-        href: filterHref({ [min]: null, [max]: null }),
-      },
-    ];
-  });
+      if (low === undefined && high === undefined) return [];
+
+      const range =
+        low !== undefined && high !== undefined
+          ? `${formatAmount(low, unit)} – ${formatAmount(high, unit)}`
+          : low !== undefined
+            ? `from ${formatAmount(low, unit)}`
+            : `up to ${formatAmount(high!, unit)}`;
+
+      return [
+        {
+          key: min,
+          text: `${label}: ${range}`,
+          href: filterHref({
+            [min]: null,
+            [max]: null,
+          }),
+        },
+      ];
+    },
+  );
 
   return (
     <BikesManager
-      brands={brands.map(({ _id, displayName }) => ({ _id, displayName }))}
+      brands={brands.map(({ _id, displayName }) => ({
+        _id,
+        displayName,
+      }))}
       initialCreate={firstParam(params.new) === "1"}
     >
       <div className="space-y-6">
@@ -144,19 +177,29 @@ export default async function ModelsPage({
                   layoutId="models-type"
                   activeHref={filterHref({})}
                   tabs={[
-                    { label: "All", href: filterHref({ type: null }) },
-                    { label: "Bikes", href: filterHref({ type: "bike" }) },
+                    {
+                      label: "All",
+                      href: filterHref({ type: null }),
+                    },
+                    {
+                      label: "Bikes",
+                      href: filterHref({ type: "bike" }),
+                    },
                     {
                       label: "Scooters",
                       href: filterHref({ type: "scooter" }),
                     },
                   ]}
                 />
+
                 <SelectFilter
                   label="Filter by brand"
                   value={brand ?? ""}
                   options={[
-                    { value: "", label: "All brands" },
+                    {
+                      value: "",
+                      label: "All brands",
+                    },
                     ...brands.map((item) => ({
                       value: item._id,
                       label: item.displayName,
@@ -166,7 +209,9 @@ export default async function ModelsPage({
                     ["", filterHref({ brand: null })],
                     ...brands.map((item) => [
                       item._id,
-                      filterHref({ brand: item._id }),
+                      filterHref({
+                        brand: item._id,
+                      }),
                     ]),
                   ])}
                 />
@@ -174,16 +219,24 @@ export default async function ModelsPage({
             }
           />
 
-          <div className="flex flex-col gap-3 border-b border-line px-5 py-3 sm:flex-row sm:flex-wrap sm:items-center sm:px-6">
-            <ModelSearch basePath={PATH} current={current} />
-            <NumberFilters basePath={PATH} current={current} />
+          <div className="flex flex-col gap-3 border-b border-[#1d2b38] px-5 py-3 sm:flex-row sm:flex-wrap sm:items-center sm:px-6">
+            <ModelSearch
+              basePath={PATH}
+              current={current}
+            />
+
+            <NumberFilters
+              basePath={PATH}
+              current={current}
+            />
+
             {chips.map((chip) => (
               <Link
                 key={chip.key}
                 href={chip.href}
                 scroll={false}
                 aria-label={`Remove filter ${chip.text}`}
-                className="inline-flex items-center gap-1.5 self-start rounded-full border border-brand/25 bg-brand/10 px-2.5 py-1 text-xs font-semibold text-brand transition-colors outline-none hover:bg-brand/20 focus-visible:ring-2 focus-visible:ring-brand/60 sm:self-auto"
+                className="inline-flex items-center gap-1.5 self-start rounded-full border border-[#FF8A00]/30 bg-[#FF8A00]/10 px-2.5 py-1 text-xs font-semibold text-[#FF8A00] transition-colors outline-none hover:bg-[#FF8A00]/20 focus-visible:ring-2 focus-visible:ring-[#FF8A00]/60 sm:self-auto"
               >
                 {chip.text}
                 <X className="size-3.5" />
@@ -196,11 +249,24 @@ export default async function ModelsPage({
             fallback={<TableSkeleton columns={6} />}
           >
             <ModelsTable
-              query={{ page, type, brand, search, ...numbers }}
+              query={{
+                page,
+                type,
+                brand,
+                search,
+                ...numbers,
+              }}
               hrefForPage={(target) =>
-                hrefWith(PATH, current, { page: target > 1 ? target : null })
+                hrefWith(PATH, current, {
+                  page: target > 1 ? target : null,
+                })
               }
-              filtered={Boolean(type || brand || search || chips.length > 0)}
+              filtered={Boolean(
+                type ||
+                  brand ||
+                  search ||
+                  chips.length > 0,
+              )}
             />
           </Suspense>
         </Panel>
@@ -209,23 +275,37 @@ export default async function ModelsPage({
   );
 }
 
-async function ModelStats({ brandCount }: { brandCount: number }) {
+async function ModelStats({
+  brandCount,
+}: {
+  brandCount: number;
+}) {
   const [all, bikes] = await Promise.all([
     getBikes({ limit: 1 }),
-    getBikes({ type: "bike", limit: 1 }),
+    getBikes({
+      type: "bike",
+      limit: 1,
+    }),
   ]);
+
   const total = all.pagination.total;
   const bikeCount = bikes.pagination.total;
 
   return (
     <StatGrid>
-      <StatCard icon={BikeIcon} label="Total models" value={total} />
+      <StatCard
+        icon={BikeIcon}
+        label="Total models"
+        value={total}
+      />
+
       <StatCard
         icon={BikeIcon}
         label="Electric bikes"
         value={bikeCount}
         href={`${PATH}?type=bike`}
       />
+
       <StatCard
         icon={Zap}
         tone="info"
@@ -233,6 +313,7 @@ async function ModelStats({ brandCount }: { brandCount: number }) {
         value={total - bikeCount}
         href={`${PATH}?type=scooter`}
       />
+
       <StatCard
         icon={Tag}
         tone="warning"
@@ -249,7 +330,9 @@ async function ModelsTable({
   hrefForPage,
   filtered,
 }: {
-  query: BikeListQuery & { page: number };
+  query: BikeListQuery & {
+    page: number;
+  };
   hrefForPage: (page: number) => string;
   filtered: boolean;
 }) {
@@ -260,7 +343,9 @@ async function ModelsTable({
     pagination.totalPages > 0 &&
     query.page > pagination.totalPages
   ) {
-    redirect(hrefForPage(pagination.totalPages));
+    redirect(
+      hrefForPage(pagination.totalPages),
+    );
   }
 
   if (bikes.length === 0) {
@@ -291,10 +376,12 @@ async function ModelsTable({
           <TH>Range / Top speed</TH>
           <TH align="right">Actions</TH>
         </TableHead>
+
         <tbody>
           {bikes.map((bike) => {
             const missing = BIKE_SPEC_FIELDS.filter(
-              ({ key }) => !bike.specs[key]?.trim(),
+              ({ key }) =>
+                !bike.specs[key]?.trim(),
             ).length;
 
             return (
@@ -306,20 +393,28 @@ async function ModelsTable({
                       alt={bike.name}
                       fallback={BikeIcon}
                     />
+
                     <div className="min-w-0">
                       <p className="flex flex-wrap items-center gap-x-2 gap-y-1 font-semibold text-white">
                         {bike.name}
+
                         {missing > 0 && (
                           <Badge tone="warning">
-                            {pluralize(missing, "spec")} missing
+                            {pluralize(
+                              missing,
+                              "spec",
+                            )}{" "}
+                            missing
                           </Badge>
                         )}
                       </p>
+
                       <p className="mt-0.5 flex items-center gap-2 text-xs text-muted">
                         <span className="inline-flex items-center gap-1">
-                          <Star className="size-3 fill-brand text-brand" />
+                          <Star className="size-3 fill-[#FF8A00] text-[#FF8A00]" />
                           {bike.rating.toFixed(1)}
                         </span>
+
                         <span className="truncate font-mono text-subtle">
                           /{bike.slug}
                         </span>
@@ -327,6 +422,7 @@ async function ModelsTable({
                     </div>
                   </div>
                 </TD>
+
                 <TD>
                   <div className="flex items-center gap-2">
                     <Thumbnail
@@ -335,24 +431,40 @@ async function ModelsTable({
                       fallback={Tag}
                       size="sm"
                     />
+
                     {bike.brand.displayName}
                   </div>
                 </TD>
+
                 <TD>
-                  <Badge tone={bike.type === "bike" ? "brand" : "info"}>
-                    {bike.type === "bike" ? <BikeIcon /> : <Zap />}
+                  <Badge
+                    tone={
+                      bike.type === "bike"
+                        ? "brand"
+                        : "info"
+                    }
+                  >
+                    {bike.type === "bike" ? (
+                      <BikeIcon />
+                    ) : (
+                      <Zap />
+                    )}
+
                     {capitalize(bike.type)}
                   </Badge>
                 </TD>
+
                 <TD className="font-semibold whitespace-nowrap text-white tabular-nums">
                   {formatPKR(bike.price)}
                 </TD>
+
                 <TD className="text-xs">
                   <SpecLine
                     text={bike.specs.range}
                     value={bike.rangeKm}
                     filter="range"
                   />
+
                   <SpecLine
                     text={bike.specs.topSpeed}
                     value={bike.topSpeedKmh}
@@ -360,14 +472,19 @@ async function ModelsTable({
                     className="mt-0.5 text-muted"
                   />
                 </TD>
+
                 <TD align="right">
-                  <RowActions item={bike} name={bike.name} />
+                  <RowActions
+                    item={bike}
+                    name={bike.name}
+                  />
                 </TD>
               </TR>
             );
           })}
         </tbody>
       </Table>
+
       <Pagination
         pagination={pagination}
         noun="models"
@@ -388,17 +505,33 @@ function SpecLine({
   filter: string;
   className?: string;
 }) {
-  if (!text?.trim()) return <p className={className}>—</p>;
+  if (!text?.trim()) {
+    return <p className={className}>—</p>;
+  }
 
   const warning = `No number found, so this model won't match ${filter} filters.`;
 
   return (
-    <p className={cn("flex items-center gap-1", className)}>
+    <p
+      className={cn(
+        "flex items-center gap-1",
+        className,
+      )}
+    >
       {text}
+
       {value === null && (
-        <span title={warning} className="text-warning">
-          <TriangleAlert aria-hidden className="size-3.5" />
-          <span className="sr-only">{warning}</span>
+        <span
+          title={warning}
+          className="text-[#FF8A00]"
+        >
+          <TriangleAlert
+            aria-hidden
+            className="size-3.5"
+          />
+          <span className="sr-only">
+            {warning}
+          </span>
         </span>
       )}
     </p>

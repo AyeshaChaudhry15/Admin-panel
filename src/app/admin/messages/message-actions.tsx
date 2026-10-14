@@ -42,6 +42,7 @@ export function MessageStatusSelect({
     startTransition(async () => {
       setOptimisticStatus(next);
       const result = await updateContactStatus(message._id, next);
+
       if (result.ok) toast.success(result.message);
       else toast.error(result.error);
     });
@@ -54,8 +55,8 @@ export function MessageStatusSelect({
         value={status}
         onChange={(event) => change(event.target.value as ContactStatus)}
         className={cn(
-          "h-8 cursor-pointer appearance-none rounded-full border py-0 pr-7 pl-3 text-xs font-semibold outline-none transition-colors focus-visible:ring-2 focus-visible:ring-brand/50 [&>option]:bg-field [&>option]:text-white",
-          toneBadge[CONTACT_STATUS_TONE[status]],
+          "h-8 cursor-pointer appearance-none rounded-full border py-0 pr-7 pl-3 text-xs font-semibold outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[#0057D9]/50 [&>option]:bg-[#0a141e] [&>option]:text-white",
+          "border-[#1d2b38] bg-[#0a141e] text-white",
         )}
       >
         {CONTACT_STATUSES.map((value) => (
@@ -64,12 +65,10 @@ export function MessageStatusSelect({
           </option>
         ))}
       </select>
+
       <ChevronDown
         aria-hidden
-        className={cn(
-          "pointer-events-none absolute top-1/2 right-2 size-3.5 -translate-y-1/2",
-          toneText[CONTACT_STATUS_TONE[status]],
-        )}
+        className="pointer-events-none absolute top-1/2 right-2 size-3.5 -translate-y-1/2 text-[#FF8A00]"
       />
     </div>
   );
@@ -77,6 +76,7 @@ export function MessageStatusSelect({
 
 export function MessageActions({ message }: { message: ContactSubmission }) {
   const [dialog, setDialog] = useState<"view" | "delete" | null>(null);
+
   const close = () => setDialog(null);
 
   return (
@@ -86,16 +86,17 @@ export function MessageActions({ message }: { message: ContactSubmission }) {
         onClick={() => setDialog("view")}
         aria-label={`Read message from ${message.fullName}`}
         title="Read"
-        className="flex size-9 items-center justify-center rounded-lg border border-line-strong bg-surface-raised text-muted transition-colors hover:border-brand hover:bg-brand/10 hover:text-brand"
+        className="flex size-9 items-center justify-center rounded-lg border border-[#1d2b38] bg-[#0a141e] text-[#0057D9] transition-colors hover:border-[#0057D9] hover:bg-[#0057D9]/10 hover:text-[#1677FF]"
       >
         <Eye className="size-4" />
       </button>
+
       <button
         type="button"
         onClick={() => setDialog("delete")}
         aria-label={`Delete message from ${message.fullName}`}
         title="Delete"
-        className="flex size-9 items-center justify-center rounded-lg border border-danger/20 bg-danger/5 text-danger/80 transition-colors hover:border-danger hover:bg-danger/10 hover:text-danger"
+        className="flex size-9 items-center justify-center rounded-lg border border-[#FF8A00]/20 bg-[#FF8A00]/5 text-[#FF8A00] transition-colors hover:border-[#FF8A00] hover:bg-[#FF8A00]/10 hover:text-[#ff9d2e]"
       >
         <Trash2 className="size-4" />
       </button>
@@ -113,29 +114,31 @@ export function MessageActions({ message }: { message: ContactSubmission }) {
           <div className="flex flex-wrap items-center gap-3">
             <a
               href={`mailto:${message.email}`}
-              className="inline-flex items-center gap-1.5 text-sm text-info transition-colors hover:text-white"
+              className="inline-flex items-center gap-1.5 text-sm text-[#0057D9] transition-colors hover:text-[#1677FF]"
             >
               <Mail className="size-4" />
               {message.email}
             </a>
+
             <Badge tone={CONTACT_STATUS_TONE[message.status]} dot>
               {capitalize(message.status)}
             </Badge>
           </div>
 
-          <div className="rounded-xl border border-line bg-field p-4 text-sm leading-relaxed whitespace-pre-wrap text-ink-soft">
+          <div className="rounded-xl border border-[#1d2b38] bg-[#0a141e] p-4 text-sm leading-relaxed whitespace-pre-wrap text-[#d7e0ea]">
             {message.message || (
-              <span className="text-subtle italic">
+              <span className="text-[#7f8c9a] italic">
                 No message was included.
               </span>
             )}
           </div>
 
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-xs text-muted">
+            <p className="text-xs text-[#8f9baa]">
               Replies go out from your email app. Mark the message as answered
               afterwards.
             </p>
+
             <MessageStatusSelect message={message} />
           </div>
         </DialogBody>
@@ -149,10 +152,18 @@ export function MessageActions({ message }: { message: ContactSubmission }) {
             <Trash2 />
             Delete
           </Button>
+
           <Button variant="secondary" onClick={close}>
             Close
           </Button>
-          <a href={replyHref(message)} className={buttonStyles()}>
+
+          <a
+            href={replyHref(message)}
+            className={cn(
+              buttonStyles(),
+              "border border-[#FF8A00] bg-[#FF8A00] text-white transition-colors hover:bg-[#e67b00]",
+            )}
+          >
             <Reply />
             Reply by email
           </a>
@@ -166,7 +177,8 @@ export function MessageActions({ message }: { message: ContactSubmission }) {
         confirmLabel="Delete message"
         description={
           <>
-            The message from <b className="text-white">{message.fullName}</b>{" "}
+            The message from{" "}
+            <b className="text-white">{message.fullName}</b>{" "}
             will be permanently deleted.
           </>
         }

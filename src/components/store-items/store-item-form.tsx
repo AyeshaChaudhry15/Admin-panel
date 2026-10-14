@@ -125,7 +125,7 @@ export function StoreItemForm({
               />
             </Field>
 
-            <label className="flex cursor-pointer items-center justify-between gap-4 rounded-xl border border-line-strong bg-field px-4 py-3 has-focus-visible:ring-2 has-focus-visible:ring-brand/40 sm:col-span-2">
+            <label className="flex cursor-pointer items-center justify-between gap-4 rounded-xl border border-line-strong bg-field px-4 py-3 has-focus-visible:ring-2 has-focus-visible:ring-[#0057D9]/40 sm:col-span-2">
               <span>
                 <span className="block text-sm font-medium text-ink-soft">
                   In stock
@@ -148,7 +148,7 @@ export function StoreItemForm({
                 aria-hidden
                 className={cn(
                   "flex h-6 w-11 shrink-0 items-center rounded-full px-0.5 transition-colors",
-                  inStock ? "bg-brand" : "bg-line-strong",
+                  inStock ? "bg-[#0057D9]" : "bg-line-strong",
                 )}
               >
                 <m.span
@@ -226,7 +226,7 @@ export function StoreItemForm({
                       )
                     }
                     aria-label={`Remove feature ${index + 1}`}
-                    className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-line-strong bg-field text-muted transition-colors hover:border-danger hover:text-danger"
+                    className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-line-strong bg-field text-muted transition-colors hover:border-[#FF8A00] hover:text-[#FF8A00]"
                   >
                     <X className="size-4" />
                   </button>
@@ -240,6 +240,7 @@ export function StoreItemForm({
             size="sm"
             onClick={addFeature}
             disabled={features.length >= MAX_FEATURES}
+            className="border-[#0057D9]/30 text-[#0057D9] hover:border-[#0057D9] hover:bg-[#0057D9]/10 hover:text-[#0057D9]"
           >
             <Plus />
             Add feature
@@ -257,7 +258,11 @@ export function StoreItemForm({
         <Button variant="secondary" onClick={onCancel} disabled={pending}>
           Cancel
         </Button>
-        <Button type="submit" pending={pending}>
+        <Button
+          type="submit"
+          pending={pending}
+          className="bg-[#0057D9] text-white hover:bg-[#0047B3]"
+        >
           {!pending && <Check />}
           {item ? "Save changes" : `Add ${singular}`}
         </Button>

@@ -56,7 +56,7 @@ export function Dropdown({
         aria-controls={panelId}
         onClick={() => setOpen((value) => !value)}
         className={cn(
-          "outline-none focus-visible:ring-2 focus-visible:ring-brand/60",
+          "outline-none focus-visible:ring-2 focus-visible:ring-[#0057D9]/60",
           triggerClassName,
         )}
       >
@@ -78,7 +78,7 @@ export function Dropdown({
             transition={{ type: "spring", stiffness: 500, damping: 34 }}
             style={{ transformOrigin: "top right" }}
             className={cn(
-              "absolute top-full right-0 z-50 mt-2 overflow-hidden rounded-xl border border-line-strong bg-surface shadow-[0_15px_35px_rgba(0,0,0,0.5)]",
+              "absolute top-full right-0 z-50 mt-2 overflow-hidden rounded-xl border border-[#1B4266] bg-[#081D31] shadow-[0_15px_35px_rgba(0,0,0,0.5)]",
               panelClassName,
             )}
           >

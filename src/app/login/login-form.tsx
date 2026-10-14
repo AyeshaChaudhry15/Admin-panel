@@ -31,17 +31,19 @@ export function LoginForm({ next }: { next?: string }) {
         <div className="mb-2 flex items-baseline justify-between gap-3">
           <label
             htmlFor="password"
-            className="text-sm font-medium text-ink-soft"
+            className="text-sm font-medium text-[#E5EDFF]"
           >
             Password
           </label>
+
           <Link
             href="/forgot-password"
-            className="text-xs font-medium text-info transition-colors hover:text-white"
+            className="text-xs font-medium text-[#0057D9] transition-colors hover:text-[#FF8A00]"
           >
             Forgot password?
           </Link>
         </div>
+
         <PasswordInput
           id="password"
           name="password"
@@ -52,9 +54,12 @@ export function LoginForm({ next }: { next?: string }) {
       </div>
 
       {state.error && <FormAlert>{state.error}</FormAlert>}
-
-      <Button type="submit" pending={pending} className="w-full">
-        {!pending && <LogIn />}
+      <Button
+        type="submit"
+        pending={pending}
+        className="w-full !bg-[#FF8A00] !text-white hover:!bg-[#E67C00]"
+      >
+        {!pending && <LogIn className="text-white" />}
         {pending ? "Signing in…" : "Sign in"}
       </Button>
     </form>

@@ -1,7 +1,13 @@
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 
-type Variant = "primary" | "secondary" | "ghost" | "danger" | "danger-soft";
+type Variant =
+  | "primary"
+  | "secondary"
+  | "ghost"
+  | "danger"
+  | "danger-soft";
+
 type Size = "sm" | "md" | "icon";
 
 const base =
@@ -9,11 +15,17 @@ const base =
 
 const variants: Record<Variant, string> = {
   primary:
-    "bg-brand text-brand-ink shadow-[0_8px_30px_rgba(102,220,23,0.15)] hover:bg-brand-strong",
+    "bg-brand text-brand-ink shadow-[0_8px_30px_rgba(255,138,0,0.15)] hover:bg-brand-strong",
+
   secondary:
-    "border border-line-strong bg-surface-raised text-ink-soft hover:border-subtle hover:text-white",
-  ghost: "text-muted hover:bg-white/5 hover:text-white",
-  danger: "bg-danger text-white hover:bg-danger/85",
+    "border border-line-strong bg-surface-raised text-ink-soft hover:border-brand/50 hover:text-white",
+
+  ghost:
+    "text-muted hover:bg-brand/10 hover:text-brand",
+
+  danger:
+    "bg-danger text-white hover:bg-danger/85",
+
   "danger-soft":
     "border border-danger/25 bg-danger/10 text-danger hover:bg-danger/20",
 };
@@ -28,11 +40,21 @@ export function buttonStyles({
   variant = "primary",
   size = "md",
   className,
-}: { variant?: Variant; size?: Size; className?: string } = {}) {
-  return cn(base, variants[variant], sizes[size], className);
+}: {
+  variant?: Variant;
+  size?: Size;
+  className?: string;
+} = {}) {
+  return cn(
+    base,
+    variants[variant],
+    sizes[size],
+    className,
+  );
 }
 
-interface ButtonProps extends React.ComponentProps<"button"> {
+interface ButtonProps
+  extends React.ComponentProps<"button"> {
   variant?: Variant;
   size?: Size;
   pending?: boolean;
@@ -53,7 +75,11 @@ export function Button({
       type={type}
       disabled={disabled || pending}
       aria-busy={pending || undefined}
-      className={buttonStyles({ variant, size, className })}
+      className={buttonStyles({
+        variant,
+        size,
+        className,
+      })}
       {...props}
     >
       {pending && <Spinner />}

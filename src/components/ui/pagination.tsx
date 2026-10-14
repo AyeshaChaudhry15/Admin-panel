@@ -35,15 +35,15 @@ export function Pagination({ pagination, noun, hrefForPage }: PaginationProps) {
   const to = Math.min(page * limit, total);
 
   return (
-    <div className="flex flex-col gap-3 border-t border-line px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-      <p className="text-xs text-muted">
+    <div className="flex flex-col gap-3 border-t border-[#E2E8F0] px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+      <p className="text-xs text-[#64748B]">
         Showing{" "}
-        <span className="font-semibold text-ink-soft">
+        <span className="font-semibold text-[#334155]">
           {formatNumber(from)}
         </span>
-        –<span className="font-semibold text-ink-soft">{formatNumber(to)}</span>{" "}
+        –<span className="font-semibold text-[#334155]">{formatNumber(to)}</span>{" "}
         of{" "}
-        <span className="font-semibold text-ink-soft">
+        <span className="font-semibold text-[#334155]">
           {formatNumber(total)}
         </span>{" "}
         {noun}
@@ -63,7 +63,7 @@ export function Pagination({ pagination, noun, hrefForPage }: PaginationProps) {
 
           {pageWindow(page, totalPages).map((item, index) =>
             item === null ? (
-              <span key={`gap-${index}`} className="px-1 text-xs text-subtle">
+              <span key={`gap-${index}`} className="px-1 text-xs text-[#94A3B8]">
                 …
               </span>
             ) : (
@@ -74,8 +74,8 @@ export function Pagination({ pagination, noun, hrefForPage }: PaginationProps) {
                 className={cn(
                   itemStyles,
                   item === page
-                    ? "border-brand bg-brand text-brand-ink"
-                    : "border-line-strong bg-surface-raised text-ink-soft hover:border-brand hover:text-brand",
+                    ? "border-[#0057D9] bg-[#0057D9] text-white"
+                    : "border-[#CBD5E1] bg-white text-[#334155] hover:border-[#0057D9] hover:text-[#0057D9]",
                 )}
               >
                 {item}
@@ -111,7 +111,7 @@ function PageLink({
         aria-label={label}
         className={cn(
           itemStyles,
-          "border-line bg-surface text-subtle opacity-50",
+          "border-[#E2E8F0] bg-[#F8FAFC] text-[#CBD5E1] opacity-70",
         )}
       >
         {children}
@@ -125,7 +125,7 @@ function PageLink({
       aria-label={label}
       className={cn(
         itemStyles,
-        "border-line-strong bg-surface-raised text-ink-soft hover:border-brand hover:text-brand",
+        "border-[#CBD5E1] bg-white text-[#334155] hover:border-[#0057D9] hover:text-[#0057D9]",
       )}
     >
       {children}

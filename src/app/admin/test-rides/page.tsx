@@ -18,7 +18,10 @@ import { Panel, PanelHeader } from "@/components/ui/panel";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { Table, TableHead, TD, TH, TR } from "@/components/ui/table";
 import { Thumbnail } from "@/components/ui/thumbnail";
-import { TEST_RIDE_STATUS_TONE, TEST_RIDE_STATUSES } from "@/lib/constants";
+import {
+  TEST_RIDE_STATUS_TONE,
+  TEST_RIDE_STATUSES,
+} from "@/lib/constants";
 import {
   capitalize,
   formatCalendarDate,
@@ -40,9 +43,16 @@ export default async function TestRidesPage({
   const params = await searchParams;
   const page = parsePage(params.page);
   const status = parseOneOf(params.status, TEST_RIDE_STATUSES);
-  const current = { status, page: page > 1 ? String(page) : undefined };
+  const current = {
+    status,
+    page: page > 1 ? String(page) : undefined,
+  };
+
   const statusHref = (value: string | null) =>
-    hrefWith(PATH, current, { status: value, page: null });
+    hrefWith(PATH, current, {
+      status: value,
+      page: null,
+    });
 
   return (
     <div className="space-y-6">
@@ -63,7 +73,10 @@ export default async function TestRidesPage({
               layoutId="test-rides-status"
               activeHref={statusHref(status ?? null)}
               tabs={[
-                { label: "All", href: statusHref(null) },
+                {
+                  label: "All",
+                  href: statusHref(null),
+                },
                 ...TEST_RIDE_STATUSES.map((value) => ({
                   label: capitalize(value),
                   href: statusHref(value),
@@ -81,7 +94,9 @@ export default async function TestRidesPage({
             page={page}
             status={status}
             hrefForPage={(target) =>
-              hrefWith(PATH, current, { page: target > 1 ? target : null })
+              hrefWith(PATH, current, {
+                page: target > 1 ? target : null,
+              })
             }
           />
         </Suspense>
@@ -99,10 +114,11 @@ async function TestRidesTable({
   status: TestRideStatus | undefined;
   hrefForPage: (page: number) => string;
 }) {
-  const { testRideRequests: requests, pagination } = await getTestRideRequests({
-    page,
-    status,
-  });
+  const { testRideRequests: requests, pagination } =
+    await getTestRideRequests({
+      page,
+      status,
+    });
 
   if (
     requests.length === 0 &&
@@ -139,6 +155,7 @@ async function TestRidesTable({
           <TH>Received</TH>
           <TH align="right">Actions</TH>
         </TableHead>
+
         <tbody>
           {requests.map((request) => (
             <TR key={request._id}>
@@ -146,27 +163,32 @@ async function TestRidesTable({
                 <p className="font-medium text-white">
                   {request.requesterName}
                 </p>
+
                 <div className="mt-1.5 flex flex-wrap gap-1.5">
                   <a
                     href={whatsAppUrl(request.requesterWhatsApp)}
                     target="_blank"
                     rel="noreferrer"
                     title={request.requesterWhatsApp}
-                    className="inline-flex items-center gap-1 rounded-md border border-brand/25 bg-brand/10 px-2 py-0.5 text-[11px] font-medium text-brand transition-colors hover:bg-brand/20"
+                    className="inline-flex items-center gap-1 rounded-md border border-[#FF8A00]/30 bg-[#FF8A00]/10 px-2 py-0.5 text-[11px] font-medium text-[#FF8A00] transition-colors hover:border-[#FF8A00]/50 hover:bg-[#FF8A00]/20"
                   >
                     <MessageCircle className="size-3" />
                     {request.requesterWhatsApp}
                   </a>
+
                   <a
                     href={`mailto:${request.requesterEmail}`}
                     title={request.requesterEmail}
-                    className="inline-flex max-w-48 items-center gap-1 rounded-md border border-line-strong bg-field px-2 py-0.5 text-[11px] font-medium text-ink-soft transition-colors hover:border-info hover:text-info"
+                    className="inline-flex max-w-48 items-center gap-1 rounded-md border border-[#0057D9]/30 bg-[#0057D9]/10 px-2 py-0.5 text-[11px] font-medium text-[#6EA8FF] transition-colors hover:border-[#0057D9] hover:text-white"
                   >
                     <Mail className="size-3 shrink-0" />
-                    <span className="truncate">{request.requesterEmail}</span>
+                    <span className="truncate">
+                      {request.requesterEmail}
+                    </span>
                   </a>
                 </div>
               </TD>
+
               <TD>
                 <div className="flex items-center gap-3">
                   <Thumbnail
@@ -175,28 +197,38 @@ async function TestRidesTable({
                     fallback={Bike}
                     size="sm"
                   />
+
                   <div className="min-w-0">
                     <p className="text-white">
                       {request.bike?.name ?? "Deleted bike"}
                     </p>
+
                     <p className="mt-0.5 text-xs text-muted">
                       {request.brand?.displayName ?? "—"}
                     </p>
                   </div>
                 </div>
               </TD>
+
               <TD>
                 <p className="whitespace-nowrap text-white">
                   {formatCalendarDate(request.preferredDate)}
                 </p>
+
                 <p className="mt-0.5 text-xs text-muted">
-                  {formatTime(request.preferredTime)} · {request.preferredCity}
+                  {formatTime(request.preferredTime)} ·{" "}
+                  {request.preferredCity}
                 </p>
               </TD>
+
               <TD>
-                <Badge tone={TEST_RIDE_STATUS_TONE[request.status]} dot>
+                <Badge
+                  tone={TEST_RIDE_STATUS_TONE[request.status]}
+                  dot
+                >
                   {capitalize(request.status)}
                 </Badge>
+
                 {request.rejectionReason && (
                   <p
                     className="mt-1.5 line-clamp-2 max-w-56 text-xs text-muted"
@@ -206,20 +238,25 @@ async function TestRidesTable({
                   </p>
                 )}
               </TD>
+
               <TD className="whitespace-nowrap text-muted">
                 {formatDate(request.createdAt)}
               </TD>
+
               <TD align="right">
                 {request.status === "pending" ? (
                   <TestRideActions request={request} />
                 ) : (
-                  <span className="text-xs text-subtle">Reviewed</span>
+                  <span className="text-xs text-subtle">
+                    Reviewed
+                  </span>
                 )}
               </TD>
             </TR>
           ))}
         </tbody>
       </Table>
+
       <Pagination
         pagination={pagination}
         noun="requests"

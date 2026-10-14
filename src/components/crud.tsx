@@ -66,7 +66,10 @@ export function CreateButton({ label }: { label: string }) {
   const { create } = useCrudControls();
 
   return (
-    <Button onClick={create}>
+    <Button
+      onClick={create}
+      className="bg-[#0057D9] text-white hover:bg-[#0047B3]"
+    >
       <Plus />
       {label}
     </Button>
@@ -83,7 +86,7 @@ export function RowActions({ item, name }: { item: unknown; name: string }) {
         onClick={() => edit(item)}
         aria-label={`Edit ${name}`}
         title="Edit"
-        className="flex size-9 items-center justify-center rounded-lg border border-line-strong bg-surface-raised text-muted transition-colors hover:border-brand hover:bg-brand/10 hover:text-brand"
+        className="flex size-9 items-center justify-center rounded-lg border border-[#0057D9]/30 bg-[#0057D9]/10 text-[#0057D9] transition-colors hover:border-[#0057D9] hover:bg-[#0057D9]/20 hover:text-[#0057D9]"
       >
         <Pencil className="size-4" />
       </button>
@@ -92,7 +95,7 @@ export function RowActions({ item, name }: { item: unknown; name: string }) {
         onClick={() => remove(item)}
         aria-label={`Delete ${name}`}
         title="Delete"
-        className="flex size-9 items-center justify-center rounded-lg border border-danger/20 bg-danger/5 text-danger/80 transition-colors hover:border-danger hover:bg-danger/10 hover:text-danger"
+        className="flex size-9 items-center justify-center rounded-lg border border-[#FF8A00]/30 bg-[#FF8A00]/10 text-[#FF8A00] transition-colors hover:border-[#FF8A00] hover:bg-[#FF8A00]/20 hover:text-[#FF8A00]"
       >
         <Trash2 className="size-4" />
       </button>

@@ -44,6 +44,7 @@ export default async function BrandsPage({
   const origins = new Set(
     brands.map((brand) => brand.origin.trim().toLowerCase()).filter(Boolean),
   );
+
   const incomplete = brands.filter(
     (brand) => !brand.about || !brand.origin,
   ).length;
@@ -60,13 +61,19 @@ export default async function BrandsPage({
         />
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <StatCard icon={Tag} label="Total brands" value={brands.length} />
+          <StatCard
+            icon={Tag}
+            label="Total brands"
+            value={brands.length}
+          />
+
           <StatCard
             icon={Globe}
             tone="info"
             label="Places of origin"
             value={origins.size}
           />
+
           <StatCard
             icon={FileWarning}
             tone="warning"
@@ -128,6 +135,7 @@ function BrandsTable({ brands }: { brands: Brand[] }) {
         <TH>Updated</TH>
         <TH align="right">Actions</TH>
       </TableHead>
+
       <tbody>
         {brands.map((brand) => {
           const links = LINKS.filter((link) => hasLink(brand[link.key]));
@@ -141,25 +149,34 @@ function BrandsTable({ brands }: { brands: Brand[] }) {
                     alt={`${brand.displayName} logo`}
                     fallback={Tag}
                   />
+
                   <div className="min-w-0">
                     <p className="font-semibold text-white">
                       {brand.displayName}
                     </p>
-                    <p className="mt-0.5 text-xs text-muted">
+
+                    <p className="mt-0.5 text-xs text-[#94A3B8]">
                       {brand.origin || "Origin not set"}
                     </p>
                   </div>
                 </div>
               </TD>
+
               <TD>
-                {brand.headquarters || <span className="text-subtle">—</span>}
+                {brand.headquarters || (
+                  <span className="text-[#64748B]">—</span>
+                )}
               </TD>
+
               <TD>
-                {brand.established || <span className="text-subtle">—</span>}
+                {brand.established || (
+                  <span className="text-[#64748B]">—</span>
+                )}
               </TD>
+
               <TD>
                 {links.length === 0 ? (
-                  <span className="text-subtle">—</span>
+                  <span className="text-[#64748B]">—</span>
                 ) : (
                   <div className="flex flex-wrap gap-1.5">
                     {links.map((link) => (
@@ -168,7 +185,7 @@ function BrandsTable({ brands }: { brands: Brand[] }) {
                         href={brand[link.key]}
                         target="_blank"
                         rel="noreferrer"
-                        className="rounded-md border border-line-strong bg-field px-2 py-1 text-[11px] font-semibold text-ink-soft transition-colors hover:border-brand hover:text-brand"
+                        className="rounded-md border border-[#24364D] bg-[#0A1624] px-2 py-1 text-[11px] font-semibold text-[#CBD5E1] transition-colors hover:border-[#FF8A00] hover:bg-[#FF8A00]/10 hover:text-[#FF8A00]"
                       >
                         {link.label}
                       </a>
@@ -176,11 +193,16 @@ function BrandsTable({ brands }: { brands: Brand[] }) {
                   </div>
                 )}
               </TD>
-              <TD className="whitespace-nowrap text-muted">
+
+              <TD className="whitespace-nowrap text-[#94A3B8]">
                 {formatDate(brand.updatedAt)}
               </TD>
+
               <TD align="right">
-                <RowActions item={brand} name={brand.displayName} />
+                <RowActions
+                  item={brand}
+                  name={brand.displayName}
+                />
               </TD>
             </TR>
           );
